@@ -1,2 +1,2 @@
-# html5-3d-editor
-plan to build a 3d editor based on html5&amp;webgl,it hasn't start yet!
+# html5-2d-editor
+plan to build a 2d editor based on html5 and webgl,it hasn't start yet!

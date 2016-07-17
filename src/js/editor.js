@@ -1,10 +1,14 @@
-
+// canvas面板
 var can = document.querySelector("#can")
+  , ctx = can.getContext("2d")
+  // 文件控件
+    open2 = document.querySelector("#open2")
   , file = document.querySelector("#file")
+
   , cols = document.querySelector("#cols")
   , rows = document.querySelector("#rows")
   , clear = document.querySelector("#clear")
-  , open2 = document.querySelector("#open2")
+
   , net = document.querySelector("#net")
   , move = document.querySelector("#move")
   , select = document.querySelector("#select")
@@ -12,12 +16,12 @@ var can = document.querySelector("#can")
   , del = document.querySelector("#del")
   , box = document.querySelector("#box")
   , color = document.querySelector("#color")
-  , ctx = can.getContext("2d")
   , width, height;
 
-var githubURL = "http://ghbtns.com/github-btn.html?user=barretlee&repo=SuperMarker&type=watch&count=true&size=middle";
+var githubURL = "http://ghbtns.com/github-btn.html?user=pengkobe&repo=html5-2d-editor&type=watch&count=true&size=middle";
+// 判断语言
 var isCN = document.body.getAttribute("lang") == "cn";
-
+// 判断浏览器
 if(navigator.appVersion.indexOf("MSIE") > -1) {
     HTMLElement.prototype.remove = HTMLElement.prototype.remove || function(){
         this.parentNode && this.parentNode.removeChild(this);
@@ -32,6 +36,7 @@ function tCls(that){
     if(that) Core.toggleClass("on", that);
 }
 
+// 弹出框
 function m(msg){
     var mask = document.createElement("div");
     mask.className = "mask";
@@ -44,11 +49,8 @@ function m(msg){
         maskInfo.innerHTML += msg;
     } else {
         if(isCN){
-            maskInfo.innerHTML += "欢迎体验 Super Marker，这是一款(将来^_^)比 mark man 好用的自动标记神器。<br />" +
-                "<a href='http://files.cnblogs.com/hustskyking/ret.gif' target='_blank'>演示地址</a>"
-        } else {
-            maskInfo.innerHTML += "Welcome to experience Super Marker, an automatic marking tool better than mark man( in future ^_^).<br />" +
-                "<a href='http://files.cnblogs.com/hustskyking/ret.gif' target='_blank'>Demonstration</a>"
+            maskInfo.innerHTML += "欢迎体验使用监控画面编辑器，适用于底图＋简单控件的监控画面制作。<br />" +
+                "<a href='#' target='_blank'>演示地址</a>"
         }
     }
 
@@ -67,12 +69,13 @@ m();
 window.onload = function() {
     var delLines = [];
 
-    // Select File
+    // 文件选择器
     file.onchange = function(e){
         var resultFile = e.target.files[0];
 
         if(!/image/.test(resultFile.type)){
-            m(isCN ? "抱歉，暂时不支持非图片格式，后续会加强的！" : "Sorry, temporarily does not support non image format, will strengthen the follow-up!");
+            m(isCN ? "抱歉，暂时不支持非图片格式，后续会加强的！" :
+             "Sorry, temporarily does not support non image format, will strengthen the follow-up!");
             return;
         }
         if(open2){
@@ -85,7 +88,7 @@ window.onload = function() {
 
         if (resultFile) {
             var reader = new FileReader();
-            
+
             reader.readAsDataURL(resultFile);
             reader.onload = function (e) {
                 var urlData = this.result;
@@ -102,10 +105,11 @@ window.onload = function() {
 
                     Core.config['ready'] = true;
                 }
-            }; 
+            };
         }
     };
 
+    // 打开文件
     open2.onclick = function(){
         if(open2.getAttribute("loading") == "yes") return;
         file.click();
@@ -156,9 +160,9 @@ window.onload = function() {
         tCls(this);
 
         Core.moveObj(box, true);
-    };    
+    };
 
-    // Info box 
+    // Info box
     info.onclick = function(){
         Core.setTurnerTag('drawInfoRectTag');
         tCls(this);

@@ -55,7 +55,7 @@ button {
     margin-top: 14px;
 }
 .box {
-    min-width: 600px; 
+    min-width: 600px;
     position: relative;
 }
 .wrapper {
@@ -67,15 +67,19 @@ button {
     overflow: hidden;
     border: 1px solid #CCC;
 }
+#components{
+     width: 80px;
+    border: 1px solid #CCC;
+    box-shadow: 3px 3px 5px #CCC;
+}
 #control {
-    position: absolute;
     left: 10px;
     top: 68px;
     width: 80px;
     border: 1px solid #CCC;
     box-shadow: 3px 3px 5px #CCC;
 }
-#control div {
+#control div, #components div {
     width: 50px;
     height: 24px;
     padding: 0 5px;
@@ -325,7 +329,7 @@ div#color {
     border-radius: 8px;
     box-shadow: 3px 3px 5px #CCC;
     font-size: 14px;
-    
+
     top: 0;
     left: 0;
     right: 0;
