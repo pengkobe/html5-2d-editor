@@ -269,3 +269,11 @@ div#color {
     border: none;
     text-decoration: none;
 }
+
+
+/* canvas相关 */
+body, div, canvas{
+    image-rendering: optimizeSpeed;
+    -webkit-image-rendering: optimizeSpeed;
+    -webkit-interpolation-mode: nearest-neighbor;
+}

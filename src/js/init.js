@@ -11,19 +11,22 @@
         asset: null,
         stage: null,
         ticker: null,
-        state: null,
-        score: 0,
 
-          ground: null,
+        ground: null,
         bg: null,
         gameReadyScene: null,
 
         init: function () {
-            this.initStage();
+            this.asset = new Editor_2d.Asset();
+            this.asset.on('complete', function (e) {
+                this.asset.off('complete');
+                this.initStage();
+            }.bind(this));
+            this.asset.load();
         },
 
         initStage: function () {
-            this.width = 720;
+            this.width = 1420;
             this.height = 1280;
             this.scale = 0.5;
 
@@ -35,7 +38,7 @@
                 scaleX: this.scale,
                 scaleY: this.scale
             });
-            document.body.appendChild(this.stage.canvas);
+            document.getElementById("box").appendChild(this.stage.canvas);
 
             //启动计时器
             this.ticker = new Hilo.Ticker(60);
@@ -45,12 +48,15 @@
 
             //绑定交互事件
             this.stage.enableDOMEvent(Hilo.event.POINTER_START, true);
-            this.stage.on(Hilo.event.POINTER_START, 
+            this.stage.enableDOMEvent(Hilo.event.POINTER_MOVE, true);
+            this.stage.enableDOMEvent(Hilo.event.POINTER_END, true);
+
+            this.stage.on(Hilo.event.POINTER_START,
                 this.onUserInput.bind(this));
+
 
             //舞台更新
             this.stage.onUpdate = this.onUpdate.bind(this);
-
 
             //初始化
             this.initBackground();
@@ -64,8 +70,7 @@
             //背景
             var bgWidth = this.width * this.scale;
             var bgHeight = this.height * this.scale;
-            //var container = document.getElementById("box");
-            document.body.insertBefore(Hilo.createElement('div', {
+            document.getElementById("box").insertBefore(Hilo.createElement('div', {
                 id: 'bg',
                 style: {
                     background: 'url(src/img/bg.png) no-repeat',
@@ -75,18 +80,34 @@
                     height: bgHeight + 'px'
                 }
             }), this.stage.canvas);
-
             //地面
             this.ground = new Hilo.Bitmap({
                 id: 'ground',
-                image: "src/img/ground.png"
+                image: this.asset.ground
             }).addTo(this.stage);
-
             //设置地面的y轴坐标
             this.ground.y = this.height - this.ground.height;
 
             //移动地面
-            Hilo.Tween.to(this.ground, { x: -60 }, { duration: 300, loop: true });
+            //Hilo.Tween.to(this.ground, { x: -60 }, { duration: 300, loop: true });
+            Hilo.copy(this.ground, Hilo.drag);
+            //[0, 0, width, height]
+            this.ground.startDrag();
+            this.ground.on(Hilo.event.POINTER_START,
+                function (params) {
+                }.bind(this));
+            this.ground.on(Hilo.event.POINTER_END,
+                function (params) {
+                    // this.ground.stopDrag();
+                }.bind(this));
+            this.ground.on(Hilo.event.POINTER_MOVE,
+                function (e) {
+                    debugger;
+                    //  console.log(e.x+":"+e.y);
+                    //  并不需要手动设置位置
+                    //  this.ground.x = e.x;
+                    //  this.ground.y = e.y;
+                }.bind(this));
         },
 
         initScenes: function () {
@@ -94,7 +115,7 @@
             this.gameReadyScene = new Editor_2d.ReadyScene({
                 width: this.width,
                 height: this.height,
-                image: "src/img/ready.png"
+                image: this.asset.ready
             }).addTo(this.stage);
         },
 
