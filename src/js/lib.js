@@ -62,7 +62,6 @@
         }
     }
 
-
     /**
      * moveObj move the paint obj
      */

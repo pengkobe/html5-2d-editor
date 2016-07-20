@@ -1,4 +1,7 @@
 
+/**
+ * 绘图背景
+ */
 (function(ns){
 
 var ReadyScene = ns.ReadyScene = Hilo.Class.create({

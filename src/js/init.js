@@ -16,6 +16,10 @@
         bg: null,
         gameReadyScene: null,
 
+        // 鼠标canvas内部移动监视
+        moveX: 0,
+        moveY: 0,
+
         init: function () {
             this.asset = new Editor_2d.Asset();
             this.asset.on('complete', function (e) {
@@ -26,10 +30,9 @@
         },
 
         initStage: function () {
-            this.width = 1420;
-            this.height = 1280;
-            this.scale = 0.5;
-
+            this.width = 710;
+            this.height = 640;
+            this.scale = 1;
             //舞台
             this.stage = new Hilo.Stage({
                 renderType: 'canvas',
@@ -38,22 +41,57 @@
                 scaleX: this.scale,
                 scaleY: this.scale
             });
-            document.getElementById("box").appendChild(this.stage.canvas);
+            var box = document.getElementById("box");
+            box.appendChild(this.stage.canvas);
+            //绑定交互事件
+            this.stage.enableDOMEvent(Hilo.event.POINTER_START, true);
+            this.stage.enableDOMEvent(Hilo.event.POINTER_MOVE, true);
+            // drag经过不会触发该事件
+            this.stage.on(Hilo.event.POINTER_MOVE,
+                function (e) {
+                    console.log(e.layerX + ":" + e.layerY);
+                    this.moveX = e.layerX;
+                    this.moveY = e.layerY;
+                }.bind(this));
+            this.stage.enableDOMEvent(Hilo.event.POINTER_END, true);
+
+            this.stage.on(Hilo.event.POINTER_START,
+                this.onUserInput.bind(this));
+
+
+            // ======= 控件拖放(BEGIN) =======
+            //关闭默认处理；  
+            box.ondragenter = function (e) {
+                e.preventDefault();
+            }
+            box.ondragover = function (e) {
+                e.preventDefault();
+            }
+            var that = this;
+            box.ondrop = function (e) {
+                // var x = that.moveX;
+                // var y = that.moveY;
+                // 正解，得到的坐标刚好是canvas内部坐标
+                var x = e.layerX;
+                var y = e.layerY;
+                var ctrInfo = e.dataTransfer.getData("text");
+                // 添加控件
+                var Ctrl = new Hilo.Bitmap({
+                    id: 'ground',
+                    image: that.asset.ground
+                }).addTo(that.stage);
+                // 设置控件位置
+                Ctrl.x = x;
+                Ctrl.y = y;
+                e.preventDefault();
+            }
+            // ======= 控件拖放(END)  =======
 
             //启动计时器
             this.ticker = new Hilo.Ticker(60);
             this.ticker.addTick(Hilo.Tween);
             this.ticker.addTick(this.stage);
             this.ticker.start();
-
-            //绑定交互事件
-            this.stage.enableDOMEvent(Hilo.event.POINTER_START, true);
-            this.stage.enableDOMEvent(Hilo.event.POINTER_MOVE, true);
-            this.stage.enableDOMEvent(Hilo.event.POINTER_END, true);
-
-            this.stage.on(Hilo.event.POINTER_START,
-                this.onUserInput.bind(this));
-
 
             //舞台更新
             this.stage.onUpdate = this.onUpdate.bind(this);
@@ -62,7 +100,7 @@
             this.initBackground();
             this.initScenes();
 
-            //准备游戏
+            // 开始
             this.gameReady();
         },
 
@@ -86,7 +124,7 @@
                 image: this.asset.ground
             }).addTo(this.stage);
             //设置地面的y轴坐标
-            this.ground.y = this.height - this.ground.height;
+            this.ground.y = 0;//this.height - this.ground.height;
 
             //移动地面
             //Hilo.Tween.to(this.ground, { x: -60 }, { duration: 300, loop: true });
@@ -98,15 +136,11 @@
                 }.bind(this));
             this.ground.on(Hilo.event.POINTER_END,
                 function (params) {
-                    // this.ground.stopDrag();
+                    // drag end
                 }.bind(this));
             this.ground.on(Hilo.event.POINTER_MOVE,
                 function (e) {
-                    debugger;
-                    //  console.log(e.x+":"+e.y);
                     //  并不需要手动设置位置
-                    //  this.ground.x = e.x;
-                    //  this.ground.y = e.y;
                 }.bind(this));
         },
 
@@ -139,15 +173,12 @@
             this.score = 0;
             this.gameReadyScene.visible = true;
         },
-
         gameStart: function () {
             this.state = 'playing';
             this.gameReadyScene.visible = false;
         },
-
         gameOver: function () {
             if (this.state !== 'over') {
-                //设置当前状态为结束over
                 this.state = 'over';
             }
         },
