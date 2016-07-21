@@ -1,6 +1,9 @@
 // canvas面板
 var can = document.querySelector("#can")
-
+  , ctx = can.getContext("2d")
+  // 文件控件
+  , open2 = document.querySelector("#open2")
+  , file = document.querySelector("#file")
   
   , move = document.querySelector("#move")
   , select = document.querySelector("#select")
@@ -57,6 +60,50 @@ m();
 window.onload = function() {
     var delLines = [];
 
+    // 选择背景底图
+    file.onchange = function(e){
+        var resultFile = e.target.files[0];
+
+        if(!/image/.test(resultFile.type)){
+            m(isCN ? "抱歉，暂时不支持非图片格式，后续会加强的！" :
+             "Sorry, temporarily does not support non image format, will strengthen the follow-up!");
+            return;
+        }
+        if(open2){
+            open2.setAttribute("loading", "yes");
+            open2.innerHTML = "Loading...";
+        }
+
+        Core.config['ready'] = false;
+
+        if (resultFile) {
+            var reader = new FileReader();
+
+            reader.readAsDataURL(resultFile);
+            reader.onload = function (e) {
+                var urlData = this.result;
+                var img = new Image();
+                img.src = urlData;
+                img.onload = function(){
+
+                    file.blur();
+                    open2 && open2.remove();
+
+                    can.width = width = this.width;
+                    can.height = height = this.height;
+                    ctx.drawImage(img, 0, 0);
+
+                    Core.config['ready'] = true;
+                }
+            };
+        }
+    };
+    // 打开文件
+    open2.onclick = function(){
+        if(open2.getAttribute("loading") == "yes") return;
+        file.click();
+    };
+
     // move
     move.onclick = function(){
         Core.setTurnerTag('moveObjTag');
@@ -69,6 +116,7 @@ window.onload = function() {
     select.onclick = function(){
         Core.setTurnerTag('selectlinesInRectTag');
         tCls(this);
+
         Core.drawRectange(box, function(rect){
             Core.detectInRectange(document.querySelectorAll(".line, .ruler"), rect, function(lines){
                 [].slice.call(lines).forEach(function(item){
@@ -78,6 +126,7 @@ window.onload = function() {
                         item.setAttribute("data-del", 'yes');
                     }
                 });
+
                 delLines = delLines.concat(lines);
             });
         });

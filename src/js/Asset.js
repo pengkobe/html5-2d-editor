@@ -12,9 +12,6 @@ var Asset = ns.Asset = Hilo.Class.create({
     ground: null,
     ready: null,
     over: null,
-    numberGlyphs: null,
-    birdAtlas: null,
-    holdback: null,
 
     load: function(){
         var resources = [
@@ -22,7 +19,6 @@ var Asset = ns.Asset = Hilo.Class.create({
             {id:'ground', src:'src/img/ground.png'},
             {id:'ready', src:'src/img/ready.png'},
         ];
-
         this.queue = new Hilo.LoadQueue();
         this.queue.add(resources);
         this.queue.on('complete', this.onComplete.bind(this));

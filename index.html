@@ -22,86 +22,45 @@
         <a href='https://github.com/pengkobe/contacts-nav/issues/new' target='_blank' class="lang">NEW ISSUE</a>
         <h1><span>By <a href="http://yipeng.info" target="_blank">kobepeng</a></span></h1>
     </div>
-    <!-- Control bar -->
+    <!-- 打开文件 -->
     <div id="control">
         <div id="open" data-title="O - 打开文件">O 打开<input type="file" value="选择图片" id="file" /></div>
-        <div id="move" data-title="M / Space - 移动画布" data-tag="movePaintTag">M 移动</div>
-        <div id="info" data-title="I - 选择区域，显示区域信息" data-tag="drawInfoRectTag">I 选框</div>
         <div id="select" data-title="S - 选择或者去除选择" data-tag="selectlinesInRectTag">S 选择</div>
         <div id="del" data-title="D - 删除选中的元素">D 删除</div>
     </div>
-
+    <!-- 控件列表 -->
     <div id="components">
         <div draggable="true" id="valueCtrl" data-title="值控件" data-tag="valueComp">值控件</div>
         <div draggable="true" id="unitCtrl" data-title="单位控件" data-tag="unitComp">单位控件</div>
         <div draggable="true" id="labelCtrl" data-title="标签控件" data-tag="labelComp">标签控件</div>
     </div>
 
-    <!-- paint box -->
+    <!-- 绘图区 -->
     <div class="wrapper">
-        <span id="open2">打开文件</span>
-        <div class="box" id="box">
-            <canvas id="can" style="width:100%;height:10%"></canvas>
-        </div>
+        <span id="openFileButton">打开文件</span>
+        <div class="box" id="box"></div>
     </div>
 
-    <script type="text/javascript" src="./src/js/hilo-standalone.min.js"></script>
+    <!-- 参数面板 -->
+    <div class="paramPanel">
+        <input type="text" />
+    </div>
+    <script>
+        var src = document.getElementById("components");
+        src.ondragstart = function (e) {
+            var tag =e.target.getAttribute("data-tag");
+            e.dataTransfer.setData("text", tag);
+        };
+        src.ondrag = function (e) {}
+    </script>
+
+    <script type="text/javascript" src="./src/js/lib/hilo-standalone.min.js"></script>
     <script type="text/javascript" src="./src/js/lib.js"></script>
     <script type="text/javascript" src="./src/js/editor.js"></script>
-     <script type="text/javascript" src="./src/js/init.js"></script>
-     <script type="text/javascript" src="./src/js/Asset.js"></script>
+    <script type="text/javascript" src="./src/js/init.js"></script>
+    <script type="text/javascript" src="./src/js/asset.js"></script>
     <script type="text/javascript" src="./src/js/readyscene.js"></script>
-
-
-    <script>  
-    function init(){  
-        //var info = document.getElementById("info");  
-        //获得被拖放的元素，本示例为相册所在的DIV  
-        var src = document.getElementById("components");  
-        //开始拖放操作  
-        src.ondragstart = function (e) {  
-            //获得被拖放的照片ID  
-            var dragImgId = e.target.id;  
-            //获得被拖动元素  
-            var dragImg = document.getElementById(dragImgId);  
-            //拖放操作结束  
-            dragImg.ondragend = function(e){  
-                //恢复提醒信息  
-                //info.innerHTML="<h2>温馨提示：可将照片直接拖到垃圾箱中</h2>";  
-            };  
-            e.dataTransfer.setData("text",dragImgId);  
-        };  
-        //拖放过程中  
-        src.ondrag = function(e){     
-            //info.innerHTML="<h2>--照片正在被拖动--</h2>";  
-        }  
-  
-        //获得拖放的目标元素  
-        var target = document.getElementById("control");  
-  
-        //关闭默认处理；  
-        target.ondragenter = function(e){  
-            e.preventDefault();  
-        }  
-        target.ondragover = function(e){  
-            e.preventDefault();     
-        }  
-  
-        //有东西拖放到了目标元素  
-        target.ondrop = function (e) {  
-            var draggedID = e.dataTransfer.getData("text");  
-            //获取相册中的DOM对象  
-            var oldElem = document.getElementById(draggedID);  
-            //从相册DIV中删除该照片的节点  
-            oldElem.parentNode.removeChild(oldElem);  
-            //将被拖动的照片DOM节点添加到垃圾桶DIV中；  
-            target.appendChild(oldElem);  
-            //info.innerHTML="<h2>温馨提示：可将照片直接拖到垃圾箱中</h2>";  
-            e.preventDefault();  
-        }  
-    }  
-    init();
-</script>
+    <script type="text/javascript" src="./src/js/ctlFactory.js"></script>
 
 </body>
 

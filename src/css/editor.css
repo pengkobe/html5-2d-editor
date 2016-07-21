@@ -62,13 +62,13 @@ button {
     position: absolute;
     top: 68px;
     bottom: 20px;
-    left: 110px;
-    right: 20px;
+    left: 150px;
+    right: 150px;
     overflow: hidden;
     border: 1px solid #CCC;
 }
 #components{
-     width: 80px;
+   width: 80px;
     border: 1px solid #CCC;
     box-shadow: 3px 3px 5px #CCC;
 }
@@ -270,10 +270,19 @@ div#color {
     text-decoration: none;
 }
 
-
 /* canvas相关 */
 body, div, canvas{
     image-rendering: optimizeSpeed;
     -webkit-image-rendering: optimizeSpeed;
     -webkit-interpolation-mode: nearest-neighbor;
+}
+
+/*参数面板*/
+.paramPanel {
+    position: absolute;
+    right: 10px;
+    top: 68px;
+    width: 120px;
+    border: 1px solid #CCC;
+    box-shadow: 3px 3px 5px #CCC;
 }

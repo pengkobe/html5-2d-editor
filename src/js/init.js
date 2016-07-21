@@ -14,12 +14,11 @@
 
         ground: null,
         bg: null,
-        gameReadyScene: null,
+        readyScene: null,
 
         // 鼠标canvas内部移动监视
-        moveX: 0,
-        moveY: 0,
-
+        // moveX: 0,
+        // moveY: 0,
         init: function () {
             this.asset = new Editor_2d.Asset();
             this.asset.on('complete', function (e) {
@@ -30,9 +29,16 @@
         },
 
         initStage: function () {
-            this.width = 710;
-            this.height = 640;
+            var that = this;
+            var box = document.getElementById("box");
+            this.width = window.innerWidth - 300;
+            this.height = 720;
             this.scale = 1;
+            // 舞台自适应宽高
+            window.addEventListener("resize", resizeStage, false);
+            function resizeStage() {
+                that.stage.resize(window.innerWidth - 300, 720, true);
+            }
             //舞台
             this.stage = new Hilo.Stage({
                 renderType: 'canvas',
@@ -41,26 +47,15 @@
                 scaleX: this.scale,
                 scaleY: this.scale
             });
-            var box = document.getElementById("box");
-            box.appendChild(this.stage.canvas);
-            //绑定交互事件
-            this.stage.enableDOMEvent(Hilo.event.POINTER_START, true);
-            this.stage.enableDOMEvent(Hilo.event.POINTER_MOVE, true);
-            // drag经过不会触发该事件
-            this.stage.on(Hilo.event.POINTER_MOVE,
-                function (e) {
-                    console.log(e.layerX + ":" + e.layerY);
-                    this.moveX = e.layerX;
-                    this.moveY = e.layerY;
-                }.bind(this));
-            this.stage.enableDOMEvent(Hilo.event.POINTER_END, true);
 
+            box.appendChild(this.stage.canvas);
+
+            //开启事件交互
+            this.stage.enableDOMEvent([Hilo.event.POINTER_START, Hilo.event.POINTER_MOVE, Hilo.event.POINTER_END]);
             this.stage.on(Hilo.event.POINTER_START,
                 this.onUserInput.bind(this));
 
-
             // ======= 控件拖放(BEGIN) =======
-            //关闭默认处理；  
             box.ondragenter = function (e) {
                 e.preventDefault();
             }
@@ -68,21 +63,35 @@
                 e.preventDefault();
             }
             var that = this;
+            // 添加控件
             box.ondrop = function (e) {
-                // var x = that.moveX;
-                // var y = that.moveY;
-                // 正解，得到的坐标刚好是canvas内部坐标
                 var x = e.layerX;
                 var y = e.layerY;
                 var ctrInfo = e.dataTransfer.getData("text");
-                // 添加控件
-                var Ctrl = new Hilo.Bitmap({
-                    id: 'ground',
-                    image: that.asset.ground
-                }).addTo(that.stage);
-                // 设置控件位置
-                Ctrl.x = x;
-                Ctrl.y = y;
+                var ctrl = null;
+                var position = { x: x, y: y }
+                switch (ctrInfo) {
+                    case "valueComp": ctrl = Editor_2d.ctlFactory.getValue(position); break;
+                    case "unitComp": ctrl = Editor_2d.ctlFactory.getUnit(position); break;
+                    case "labelComp": ctrl = Editor_2d.ctlFactory.getLabel(position); break;
+                    default: break;
+                }
+                if (ctrl == null) {
+                    return;
+                } else {
+                    that.readyScene.addCtrl(ctrl);
+                    //ctrl.addTo(that.stage);
+                    Hilo.copy(ctrl, Hilo.drag);
+                    ctrl.startDrag();
+                }
+                // var Ctrl = new Hilo.Bitmap({
+                //     id: 'ground',
+                //     image: that.asset.ground
+                // }).addTo(that.stage);
+                // Hilo.copy(Ctrl, Hilo.drag);
+                // Ctrl.startDrag();
+                // Ctrl.x = x;
+                // Ctrl.y = y;
                 e.preventDefault();
             }
             // ======= 控件拖放(END)  =======
@@ -92,73 +101,87 @@
             this.ticker.addTick(Hilo.Tween);
             this.ticker.addTick(this.stage);
             this.ticker.start();
-
             //舞台更新
             this.stage.onUpdate = this.onUpdate.bind(this);
-
             //初始化
             this.initBackground();
             this.initScenes();
-
             // 开始
-            this.gameReady();
+            this.ready();
         },
 
         initBackground: function () {
-            //背景
-            var bgWidth = this.width * this.scale;
-            var bgHeight = this.height * this.scale;
-            document.getElementById("box").insertBefore(Hilo.createElement('div', {
-                id: 'bg',
-                style: {
-                    background: 'url(src/img/bg.png) no-repeat',
-                    backgroundSize: bgWidth + 'px, ' + bgHeight + 'px',
-                    position: 'absolute',
-                    width: bgWidth + 'px',
-                    height: bgHeight + 'px'
-                }
-            }), this.stage.canvas);
-            //地面
-            this.ground = new Hilo.Bitmap({
-                id: 'ground',
-                image: this.asset.ground
-            }).addTo(this.stage);
-            //设置地面的y轴坐标
-            this.ground.y = 0;//this.height - this.ground.height;
-
-            //移动地面
-            //Hilo.Tween.to(this.ground, { x: -60 }, { duration: 300, loop: true });
-            Hilo.copy(this.ground, Hilo.drag);
-            //[0, 0, width, height]
-            this.ground.startDrag();
-            this.ground.on(Hilo.event.POINTER_START,
-                function (params) {
-                }.bind(this));
-            this.ground.on(Hilo.event.POINTER_END,
-                function (params) {
-                    // drag end
-                }.bind(this));
-            this.ground.on(Hilo.event.POINTER_MOVE,
-                function (e) {
-                    //  并不需要手动设置位置
-                }.bind(this));
+            // var bgWidth = that.width * that.scale;
+            // var bgHeight = that.height * that.scale;
+            // document.getElementById("box").insertBefore(Hilo.createElement('div', {
+            //     id: 'bg',
+            //     style: {
+            //         background: 'url(' + urlData + ') no-repeat',
+            //         backgroundSize: bgWidth + 'px, ' + bgHeight + 'px',
+            //         position: 'absolute',
+            //         width: bgWidth + 'px',
+            //         height: bgHeight + 'px'
+            //     }
+            // }), that.stage.canvas);
         },
-
+        // 选择底图
+        addBaseMap: function () {
+            var that = this;
+            var openfile = document.querySelector("#openFileButton"),
+                file = document.querySelector("#file")
+            file.onchange = function (e) {
+                var resultFile = e.target.files[0];
+                if (!/image/.test(resultFile.type)) {
+                    m("抱歉，暂时不支持非图片格式，后续会加强的！");
+                    return;
+                }
+                if (openfile) {
+                    openfile.setAttribute("loading", "yes");
+                    openfile.innerHTML = "Loading...";
+                }
+                if (resultFile) {
+                    var reader = new FileReader();
+                    reader.readAsDataURL(resultFile);
+                    reader.onload = function (e) {
+                        var urlData = this.result;
+                        var img = new Image();
+                        img.src = urlData;
+                        // TODO:保存图片至服务端
+                        img.onload = function () {
+                            //BitMap无法动态修改宽高
+                            var bmp = new Hilo.Bitmap({
+                                image: urlData,
+                                rect: [0, 0, that.width, that.height],
+                                x: 0,
+                                y: 0,
+                                scaleY: 0.9
+                            });
+                            that.readyScene.addCtrl(bmp,"baseMap");
+                            file.blur();
+                            openfile && openfile.remove();
+                        }
+                    };
+                }
+            };
+            // 打开文件
+            openfile.onclick = function () {
+                if (openfile.getAttribute("loading") == "yes") return;
+                file.click();
+            };
+        },
+        //准备场景
         initScenes: function () {
-            //准备场景
-            this.gameReadyScene = new Editor_2d.ReadyScene({
+            this.readyScene = new Editor_2d.ReadyScene({
                 width: this.width,
                 height: this.height,
                 image: this.asset.ready
             }).addTo(this.stage);
+      //      this.readyScene.enableDOMEvent([Hilo.event.POINTER_START, Hilo.event.POINTER_MOVE, Hilo.event.POINTER_END]);
         },
 
         // 画控件至面板
         onUserInput: function (e) {
             if (this.state !== 'over') {
-                //启动游戏场景
-                if (this.state !== 'playing')
-                    this.gameStart();
             }
         },
 
@@ -168,33 +191,21 @@
             }
         },
 
-        gameReady: function () {
+        ready: function () {
             this.state = 'ready';
-            this.score = 0;
-            this.gameReadyScene.visible = true;
+            this.addBaseMap();
+            this.readyScene.visible = true;
         },
-        gameStart: function () {
-            this.state = 'playing';
-            this.gameReadyScene.visible = false;
+        start: function () {
+            this.state = 'beginning';
+            //  this.readyScene.visible = false;
         },
-        gameOver: function () {
-            if (this.state !== 'over') {
-                this.state = 'over';
-            }
-        },
-
         // 提交监控画面
         savePagedata: function () {
-            var score = this.score, best = 0;
             if (Hilo.browser.supportStorage) {
-                best = parseInt(localStorage.getItem('hilo-flappy-best-score')) || 0;
+                var best = parseInt(localStorage.getItem('hisData')) || 0;
             }
-            if (score > best) {
-                best = score;
-                localStorage.setItem('hilo-flappy-best-score', score);
-            }
-            return best;
+            return true;
         }
     };
-
 })();
