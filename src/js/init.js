@@ -65,34 +65,26 @@
             var that = this;
             // 添加控件
             box.ondrop = function (e) {
+                e.preventDefault();
                 var x = e.layerX;
                 var y = e.layerY;
                 var ctrInfo = e.dataTransfer.getData("text");
                 var ctrl = null;
                 var position = { x: x, y: y }
                 switch (ctrInfo) {
-                    case "valueComp": ctrl = Editor_2d.ctlFactory.getValue(position); break;
-                    case "unitComp": ctrl = Editor_2d.ctlFactory.getUnit(position); break;
-                    case "labelComp": ctrl = Editor_2d.ctlFactory.getLabel(position); break;
-                    default: break;
+                    case "valueComp":
+                        ctrl = Editor_2d.ctlFactory.getValue(position);
+                        break;
+                    case "unitComp":
+                        ctrl = Editor_2d.ctlFactory.getUnit(position);
+                        break;
+                    case "labelComp":
+                        ctrl = Editor_2d.ctlFactory.getLabel(position);
+                        break;
+                    default: return;
                 }
-                if (ctrl == null) {
-                    return;
-                } else {
-                    that.readyScene.addCtrl(ctrl);
-                    //ctrl.addTo(that.stage);
-                    Hilo.copy(ctrl, Hilo.drag);
-                    ctrl.startDrag();
-                }
-                // var Ctrl = new Hilo.Bitmap({
-                //     id: 'ground',
-                //     image: that.asset.ground
-                // }).addTo(that.stage);
-                // Hilo.copy(Ctrl, Hilo.drag);
-                // Ctrl.startDrag();
-                // Ctrl.x = x;
-                // Ctrl.y = y;
-                e.preventDefault();
+                that.readyScene.addCtrl(ctrl, ctrInfo);
+
             }
             // ======= 控件拖放(END)  =======
 
@@ -156,7 +148,7 @@
                                 y: 0,
                                 scaleY: 0.9
                             });
-                            that.readyScene.addCtrl(bmp,"baseMap");
+                            that.readyScene.addBaseMap(bmp);
                             file.blur();
                             openfile && openfile.remove();
                         }
@@ -176,7 +168,6 @@
                 height: this.height,
                 image: this.asset.ready
             }).addTo(this.stage);
-      //      this.readyScene.enableDOMEvent([Hilo.event.POINTER_START, Hilo.event.POINTER_MOVE, Hilo.event.POINTER_END]);
         },
 
         // 画控件至面板
