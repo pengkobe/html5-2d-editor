@@ -51,7 +51,7 @@ function m(msg){
         maskInfo.remove();
     }
 };
-m();
+//m();
 
 
 window.onload = function() {

@@ -6,21 +6,22 @@
     var CtrlCount = 1;
     var ctlFactory = ns.ctlFactory = {
         getValue: function (position) {
-            var font = "14px arial";
-            var content = "只是一个Value组件。";
+            var font = "18px arial";
+            var content = 'Value组件。<div class="drag-clock"></div>';
             var elem = new Hilo.DOMElement({
                 id: "value_" + CtrlCount,
+                class:"drag-element",
                 element: Hilo.createElement('div', {
-
                     innerHTML: content,
                     style: {
                         position: 'absolute',
                         font: font,
-                        color: "#000"
+                        color: "#fff",
+                        background: "#000",
                     }
                 }),
-                width: 250,
-                height: 100,
+                width: 100,
+                height: 40,
                 x: position.x,
                 y: position.y,
             });
@@ -29,9 +30,10 @@
         },
         getUnit: function (position) {
             var font = "14px arial";
-            var content = "只是一个Unit组件。";
+            var content = "Unit组件。";
             var elem = new Hilo.DOMElement({
                 id: "unit_" + CtrlCount,
+                 class:"drag-element",
                 element: Hilo.createElement('div', {
                     innerHTML: content,
                     style: {
@@ -39,8 +41,8 @@
                         font: font
                     }
                 }),
-                width: 250,
-                height: 100,
+                width: 100,
+                height: 35,
                 x: position.x,
                 y: position.y,
             });
@@ -48,10 +50,11 @@
             return elem;
         },
         getLabel: function (position) {
-            var font = "14px arial";
-            var content = "只是一个Label组件。";
+            var font = "14px arial bold";
+            var content = "Label组件。";
             var elem = new Hilo.DOMElement({
                 id: "label_" + CtrlCount,
+                 class:"drag-element",
                 element: Hilo.createElement('div', {
 
                     innerHTML: content,
@@ -60,8 +63,8 @@
                         font: font
                     }
                 }),
-                width: 250,
-                height: 100,
+                width: 100,
+                height: 35,
                 x: position.x,
                 y: position.y,
             });

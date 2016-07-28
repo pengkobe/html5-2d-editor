@@ -96,7 +96,7 @@ button {
 }
  #components div{
     width: 100px;
-    height: 48px;
+    height: 32px;
     padding: 5px;
     border: 1px solid #CCC;
     background: #EFEFEF;
@@ -304,3 +304,28 @@ body, div, canvas{
 .paramPanel input{
     width: 100%;
 }
+
+/*拖动放大缩小*/
+#box123 { 
+    width: 200px; height: 100px; cursor: move; 
+    position: absolute; 
+    top: 30px; left: 30px;
+    background-color: #FFF; 
+    border: 1px solid #CCCCCC;  
+    -webkit-box-shadow: 10px 10px 25px #ccc;
+    -moz-box-shadow: 10px 10px 25px #ccc;
+    box-shadow: 10px 10px 25px #ccc;
+}
+.drag-element{
+       box-shadow: 10px 10px 25px #ccc;
+}
+.drag-clock{
+    width: 10px; height: 10px; 
+    overflow: hidden; 
+    cursor: se-resize;
+    position: absolute;right: 0; bottom: 0; 
+    background-color: #09C; 
+}
+
+
+
