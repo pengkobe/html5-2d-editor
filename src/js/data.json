@@ -1,0 +1,16 @@
+{
+    "data":[
+        {
+            "type":"value",
+            "ctrls":[{"name":"","value":"123"}]
+        },
+        {
+            "type":"unit",
+            "ctrls":[]
+        },
+        {
+            "type":"label",
+            "ctrls":[]
+        }
+    ]
+}

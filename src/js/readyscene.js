@@ -9,11 +9,11 @@
             ReadyScene.superclass.constructor.call(this, properties);
             this.init(properties);
         },
-        index: 1,
+        // index: 1,
         ctrlList: [],  // {type: type, target: Ctrl,info: {}} 
         baseMap: false,
         selectedCtrl: null,
-        state:'',//move 
+        state: '',//move 
         /**
         * 初始化
         * @properties  {Object} [配置]
@@ -42,9 +42,36 @@
                     ctrlList.splice(deleindex, 1);
                 }
             });
+           
             // 提交页面
             $("#submitPage").on('click', function (e) {
                 that.submitCtrlData();
+            });
+            // 保存控件信息提交事件
+            this.saveCtrlData();
+            // 鼠标移动事件
+            this.moveCtrl();
+             // 拖拽/放大选中元素
+            $("#dragmoveCtrl").on('click', function () {
+                that.selectedCtrl.startDrag();
+                $(this).css("background", "#777");
+            });
+            this.on(Hilo.event.POINTER_MOVE,
+                function (e) {
+                    if (that.state == "scale") {
+                        var X = that.selectedCtrl.x;
+                        var Y = that.selectedCtrl.y;
+                        var preX = e.stageX;
+                        var preY = e.stageY;
+                        that.selectedCtrl.width = e.movementX + that.selectedCtrl.width;
+                        that.selectedCtrl.height = e.movementY + that.selectedCtrl.height;
+                    }
+                });
+
+            this.on(Hilo.event.POINTER_END, function (e) {
+                that.state = "";
+                $("#dragmoveCtrl").css("background", "#efefef");
+                that.selectedCtrl.stopDrag();
             });
         },
         /**
@@ -84,16 +111,18 @@
             Hilo.copy(Ctrl, Hilo.drag);
             Ctrl.startDrag();
             Ctrl.cursor = "pointer";
-            // 鼠标移动事件
-            this.moveCtrl();
+
             // 选中事件
             Ctrl.on(Hilo.event.POINTER_START,
                 function (e) {
                     var target = e.eventTarget;
-                    // 拖拽放大
-                    if (target.__dragY < target.height && target.__dragX < target.width) {
-                        target.stopDrag();
+                    that.selectedCtrl = target;
+                    // 拖拽放大缩小，方块为10个像素
+                    if ((e.layerX - target.x) >= (target.width - 10) && (e.layerY - target.y) >= (target.height - 10)) {
+                        that.state = "scale";
+                        e.preventDefault();
                     } else {
+                        that.state = "";
                         var _id = target.id;
                         var _index = _id.indexOf('_');
                         var type = _id.substring(0, _index);
@@ -107,32 +136,12 @@
                         // 选中样式()
                         var ele = document.getElementById(_id);
                         ele.style.border = "1px dotted red";
-                        // 选中组件
-                        this.selectedCtrl = target;
                         //  切换输入面板
                         that.switchCtrlInput(type, ctrlList, target);
                     }
                 }.bind(this));
-
-            // 选中事件
-            Ctrl.on(Hilo.event.POINTER_MOVE,
-                function (e) {
-                    var target = e.eventTarget;
-                    var layerX = e.layerX;
-                    var layerY = e.layerY;
-                    // 拖拽放大
-                   // if (target.__dragY < 10 - target.height && target.__dragX < 10 - target.width) {
-                       // e.preventDefault();
-                        target.width = layerX - target.x; //+ target.width;
-                        target.height = layerY - target.y;//+  target.height;
-                    // } else {
-                    // }
-                }.bind(this));
-
-            // 保存控件信息提交事件
-            this.saveCtrlData();
         },
-        /**
+       /**
        * 控件信息输入面板切换
        * @type {String} [控件类型/value/unit/label]
        * @ctrlList {Array} [控件列表]
@@ -252,7 +261,7 @@
                 for (var i = 0; i < ctlLength; i++) {
                     if (ctrlList[i].target.id == selectedCtrl.id) {
                         ctrlList[i].info.data = data;
-                        $("#" + ctrlList[i].target.id).html("{{" + data + "}}");
+                        $("#" + ctrlList[i].target.id).find("span").text("{{" + data + "}}");
                         break;
                     }
                 }

@@ -28,7 +28,7 @@
     <div id="control">
         <div id="open" data-title="打开文件">添加底图<input type="file" value="选择图片" id="file" /></div>
         <div id="delCtrl" data-title="删除选中的元素">删除选中元素</div>
-        <!--<div id="select" data-title="S - 选择或者去除选择" data-tag="selectlinesInRectTag">S 选择</div>-->
+        <div id="dragmoveCtrl" data-title="拖动选中的元素">拖动选中的元素</div>
     </div>
     <!-- 控件列表 -->
     <div id="components">
@@ -67,7 +67,6 @@
             <input type="button" id="label_submit" value="保存" />
         </div>
     </div>
-
     <script>
         var src = document.getElementById("components");
         src.ondragstart = function (e) {
@@ -80,7 +79,7 @@
     <!-- lib -->
     <script type="text/javascript" src="./src/js/lib/jquery.min.js"></script>
     <script type="text/javascript" src="./src/js/lib/hilo-standalone.min.js"></script>
-    
+
     <script type="text/javascript" src="./src/js/lib.js"></script>
     <script type="text/javascript" src="./src/js/editor.js"></script>
 
@@ -89,13 +88,13 @@
     <script type="text/javascript" src="./src/js/readyscene.js"></script>
     <script type="text/javascript" src="./src/js/ctlFactory.js"></script>
 
-<script>
+    <script>
     
     $(".drag-clock").on('mousedown',function(){
         alert();
     })
 </script>
- 
+
 </body>
 
 </html>

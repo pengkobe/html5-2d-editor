@@ -7,7 +7,7 @@
     var ctlFactory = ns.ctlFactory = {
         getValue: function (position) {
             var font = "18px arial";
-            var content = 'Value组件。<div class="drag-clock"></div>';
+            var content = '<span>Value组件。</span><div class="drag-clock"></div>';
             var elem = new Hilo.DOMElement({
                 id: "value_" + CtrlCount,
                 class:"drag-element",
