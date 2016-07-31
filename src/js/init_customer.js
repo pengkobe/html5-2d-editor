@@ -11,7 +11,8 @@
         asset: null,
         stage: null,
         ticker: null,
-        readyScene: null,
+        customerScene: null,
+        valueRefreshArr: [],  // 值控件
         /**
         * 初始化静态资源
         */
@@ -28,8 +29,7 @@
         */
         initStage: function () {
             var that = this;
-
-            var container = document.getElementById("box");
+            var box = document.getElementById("box");
             this.width = window.innerWidth - 300;
             this.height = 720;
             this.scale = 1;
@@ -42,84 +42,72 @@
                 scaleX: this.scale,
                 scaleY: this.scale
             });
-            container.appendChild(this.stage.canvas);
-            // 事件绑定(拖拽等)
+            box.appendChild(this.stage.canvas);
+            // 事件绑定
             this.binEvents();
+            // 加载场景
+            this.initScenes();
+            // 从服务端拉取数据
+            this.ajaxLoadData();
 
             //启动计时器
             this.ticker = new Hilo.Ticker(60);
             this.ticker.addTick(Hilo.Tween);
             this.ticker.addTick(this.stage);
             this.ticker.start();
-
-            //舞台更新事件
+            //舞台更新
             this.stage.onUpdate = this.onUpdate.bind(this);
-            this.initScenes();
+            // 开始
             this.ready();
+            // 刷新数据
+            this.dataRefresh();
         },
-
+        /**
+        * 事件绑定
+        */
         binEvents: function () {
             var that = this;
-
             //开启事件交互
             this.stage.enableDOMEvent([Hilo.event.POINTER_START, Hilo.event.POINTER_MOVE, Hilo.event.POINTER_END]);
-            this.stage.on(Hilo.event.POINTER_START,
-                this.onUserInput.bind(this));
-
             // 舞台自适应宽高
             window.addEventListener("resize", resizeStage, false);
             function resizeStage() {
                 that.stage.resize(window.innerWidth - 300, 720, true);
             }
-
-            // ======= 控件拖放(BEGIN) =======
-            box.ondragenter = function (e) {
-                e.preventDefault();
-            }
-            box.ondragover = function (e) {
-                e.preventDefault();
-            }
-            // 添加控件
-            box.ondrop = function (e) {
-                e.preventDefault();
-                var x = e.layerX;
-                var y = e.layerY;
-                var ctrInfo = e.dataTransfer.getData("text");
-                var ctrl = null;
-                var position = { x: x, y: y }
-                switch (ctrInfo) {
-                    case "valueComp":
-                        ctrl = Editor_2d.ctlFactory.getValue(position);
-                        break;
-                    case "unitComp":
-                        ctrl = Editor_2d.ctlFactory.getUnit(position);
-                        break;
-                    case "labelComp":
-                        ctrl = Editor_2d.ctlFactory.getLabel(position);
-                        break;
-                    default: return;
-                }
-                that.readyScene.addCtrl(ctrl, ctrInfo);
-
-            }
-            // ======= 控件拖放(END)  =======
         },
         /**
-        * 加载底图[背景法](废弃)
+        * 加载数据
         */
-        initBackground: function () {
-            // var bgWidth = that.width * that.scale;
-            // var bgHeight = that.height * that.scale;
-            // document.getElementById("box").insertBefore(Hilo.createElement('div', {
-            //     id: 'bg',
-            //     style: {
-            //         background: 'url(' + urlData + ') no-repeat',
-            //         backgroundSize: bgWidth + 'px, ' + bgHeight + 'px',
-            //         position: 'absolute',
-            //         width: bgWidth + 'px',
-            //         height: bgHeight + 'px'
-            //     }
-            // }), that.stage.canvas);
+        ajaxLoadData: function () {
+            // 从服务端拉取数据
+            var dataJson =null;// window.localStorage.getItem("monitorPageData");
+            if (!dataJson) {
+                dataJson = '{"valueCtrls":[{"name":"dddd","x":126,"y":91,"height":73,"width":120}],"unitCtrls":[{"name":"dx","x":255,"y":128,"height":35,"width":100}],"labelCtrls":[{"name":"lx","x":125,"y":168,"height":35,"width":100}]}'
+            }
+            var dataObj = JSON.parse(dataJson);
+            // 值控件
+            var valueCtrls = dataObj.valueCtrls;
+            for (var i in valueCtrls) {
+                ctrl = Editor_2d.ctlFactory.getValue(valueCtrls[i]);
+                var ctrlId = ctrl.id;
+                var bindName = valueCtrls[i].name;
+                this.valueRefreshArr.push({ ctrlId: ctrlId, bindName: bindName });
+                this.customerScene.addCtrl(ctrl, "valueComp");
+            }
+
+            // 单位控件
+            var unitCtrls = dataObj.unitCtrls;
+            for (var i in unitCtrls) {
+                ctrl = Editor_2d.ctlFactory.getUnit(unitCtrls[i]);
+                this.customerScene.addCtrl(ctrl, "unitComp");
+            }
+
+            // 标签控件
+            var labelCtrls = dataObj.labelCtrls;
+            for (var i in labelCtrls) {
+                ctrl = Editor_2d.ctlFactory.getLabel(labelCtrls[i]);
+                this.customerScene.addCtrl(ctrl, "labelComp");
+            }
         },
         /**
         * 加载底图
@@ -155,7 +143,7 @@
                                 y: 0,
                                 scaleY: 0.9
                             });
-                            that.readyScene.addBaseMap(bmp);
+                            that.customerScene.addBaseMap(bmp);
                             file.blur();
                             openfile && openfile.remove();
                         }
@@ -172,18 +160,11 @@
         *  初始化场景
         */
         initScenes: function () {
-            this.readyScene = new Editor_2d.ReadyScene({
+            this.customerScene = new Editor_2d.CustomerScene({
                 width: this.width,
                 height: this.height,
                 image: this.asset.ready
             }).addTo(this.stage);
-        },
-        /**
-        *  用户交互
-        */
-        onUserInput: function (e) {
-            if (this.state !== 'over') {
-            }
         },
         /**
         *  场景刷新
@@ -194,13 +175,36 @@
             }
         },
         /**
-        *  场景准备完毕
+        *  场景切换
         */
         ready: function () {
             this.state = 'ready';
-            // 加载底图事件
             this.addBaseMap();
-            this.readyScene.visible = true;
+            this.customerScene.visible = true;
         },
+        /**
+        * 数据刷新
+        */
+        dataRefresh: function () {
+            var that = this;
+            this.state = 'beginning';
+            // 刷新值数据
+            var data = {
+                value1: 123,
+                value2: "停止",
+                value3: "正常区",
+            }
+            var cha = 1;
+            setInterval(function (params) {
+                for (var i = 0; i < that.valueRefreshArr.length; i++) {
+                    var temp = that.valueRefreshArr[i];
+                    var value = data[temp.bindName];
+                    if (value) {
+                        $("#" + temp.ctrlId).html(value + cha);
+                    }
+                    cha++;
+                }
+            }, 5000);
+        }
     };
 })();

@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -17,26 +18,12 @@
 
 <body lang="cn">
     <div class="header">
-        <input type="button" value="生成页面" id="submitPage" style="width:80px;height:50px;background-color:green;float:right;color:white;cursor:pointer"
-        />
-        <!-- Github frame 
-        <iframe allowtransparency="true" frameborder="0" scrolling="0" width="90px" height="20px" class="github-star"></iframe>
-        <a href='https://github.com/pengkobe/contacts-nav/issues/new' target='_blank' class="lang">NEW ISSUE</a>-->
         <h1><span>By <a href="http://eegrid.com" target="_blank">能效通网络</a></span></h1>
     </div>
     <!-- 打开文件 -->
     <div id="control">
+
         <div id="open" data-title="打开文件">添加底图<input type="file" value="选择图片" id="file" /></div>
-        <div id="delCtrl" data-title="删除选中的元素">删除选中元素</div>
-        <!--<div id="select" data-title="S - 选择或者去除选择" data-tag="selectlinesInRectTag">S 选择</div>-->
-    </div>
-    <!-- 控件列表 -->
-    
-    <div id="components">
-        拖拽下列控件:
-        <div draggable="true" id="valueCtrl" data-title="值控件" data-tag="valueComp">值控件(22321)</div>
-        <div draggable="true" id="unitCtrl" data-title="单位控件" data-tag="unitComp">单位控件(kWh)</div>
-        <div draggable="true" id="labelCtrl" data-title="标签控件" data-tag="labelComp">标签控件(压力)</div>
     </div>
 
     <!-- 绘图区 -->
@@ -45,49 +32,13 @@
         <div class="box" id="box"></div>
     </div>
 
-    <!-- 参数面板 -->
-    <div class="paramPanel">
-        <div id="value_block" style="display:none">
-            <!-- 值控件(参数名称) -->
-            <label for="valueField">字段名称：</label>
-            <input type="text" name="valueField" id="valueField" placeholder="字段名称" />
-            <input type="button" id="value_submit" value="保存" />
-        </div>
-
-        <div id="unit_block" style="display:none">
-            <!-- 单位控件(名称) -->
-            <label for="unitField">单位名称：</label>
-            <input type="text" name="unitField" id="unitField" placeholder="单位名称" />
-            <input type="button" id="unit_submit" value="保存" />
-        </div>
-
-        <div id="label_block" style="display:none">
-            <!-- 标签控件(名称) -->
-            <label for="labelField">标签名称：</label>
-            <input type="text" name="labelField" id="labelField" placeholder="标签名称" />
-            <input type="button" id="label_submit" value="保存" />
-        </div>
-    </div>
-
-    <script>
-        var src = document.getElementById("components");
-        src.ondragstart = function (e) {
-            var tag =e.target.getAttribute("data-tag");
-            e.dataTransfer.setData("text", tag);
-        };
-        src.ondrag = function (e) {}
-    </script>
-
     <!-- lib -->
     <script type="text/javascript" src="./src/js/lib/jquery.min.js"></script>
     <script type="text/javascript" src="./src/js/lib/hilo-standalone.min.js"></script>
 
-    <script type="text/javascript" src="./src/js/lib.js"></script>
-    <script type="text/javascript" src="./src/js/editor.js"></script>
-
-    <script type="text/javascript" src="./src/js/init.js"></script>
+    <script type="text/javascript" src="./src/js/init_customer.js"></script>
     <script type="text/javascript" src="./src/js/asset.js"></script>
-    <script type="text/javascript" src="./src/js/readyscene.js"></script>
+    <script type="text/javascript" src="./src/js/customerscene.js"></script>
     <script type="text/javascript" src="./src/js/ctlFactory.js"></script>
 </body>
 

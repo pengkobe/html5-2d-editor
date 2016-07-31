@@ -42,7 +42,7 @@
                     ctrlList.splice(deleindex, 1);
                 }
             });
-           
+
             // 提交页面
             $("#submitPage").on('click', function (e) {
                 that.submitCtrlData();
@@ -51,7 +51,7 @@
             this.saveCtrlData();
             // 鼠标移动事件
             this.moveCtrl();
-             // 拖拽/放大选中元素
+            // 拖拽/放大选中元素
             $("#dragmoveCtrl").on('click', function () {
                 that.selectedCtrl.startDrag();
                 $(this).css("background", "#777");
@@ -141,12 +141,12 @@
                     }
                 }.bind(this));
         },
-       /**
-       * 控件信息输入面板切换
-       * @type {String} [控件类型/value/unit/label]
-       * @ctrlList {Array} [控件列表]
-       * @target {Object} [当前选中控件]
-       */
+        /**
+        * 控件信息输入面板切换
+        * @type {String} [控件类型/value/unit/label]
+        * @ctrlList {Array} [控件列表]
+        * @target {Object} [当前选中控件]
+        */
         switchCtrlInput: function (type, ctrlList, target) {
             switch (type) {
                 case "value":
@@ -287,18 +287,36 @@
                 }
                 switch (ctrlList[i].type) {
                     case "valueComp":
-                        data.valueCtrls.push({ name: ctrl.info.data, x: ctrl.target.x, y: ctrl.target.y });
+                        data.valueCtrls.push({
+                            name: ctrl.info.data,
+                            x: ctrl.target.x, y: ctrl.target.y,
+                            height: ctrl.target.height, width: ctrl.target.width
+                        });
                         break;
                     case "unitComp":
-                        data.unitCtrls.push({ name: ctrl.info.data, x: ctrl.target.x, y: ctrl.target.y });
+                        data.unitCtrls.push({
+                            name: ctrl.info.data,
+                            x: ctrl.target.x, y: ctrl.target.y,
+                            height: ctrl.target.height, width: ctrl.target.width
+                        });
                         break;
                     case "labelComp":
-                        data.labelCtrls.push({ name: ctrl.info.data, x: ctrl.target.x, y: ctrl.target.y });
+                        data.labelCtrls.push({
+                            name: ctrl.info.data,
+                            x: ctrl.target.x, y: ctrl.target.y,
+                            height: ctrl.target.height, width: ctrl.target.width
+                        });
                         break;
                     default: return;
                 }
             }
             // 暂存至服务端
+
+            var data = JSON.stringify(data);
+            if (Hilo.browser.supportStorage) {
+                window.localStorage.removeItem("monitorPageData");
+                window.localStorage.setItem("monitorPageData", data);
+            }
         }
     });
 })(window.Editor_2d);
