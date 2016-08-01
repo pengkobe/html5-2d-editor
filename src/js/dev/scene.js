@@ -11,7 +11,7 @@
         },
         // index: 1,
         ctrlList: [],  // {type: type, target: Ctrl,info: {}} 
-        baseMap: false,
+        baseMap: null,
         selectedCtrl: null,
         state: '',//move 
         /**
@@ -79,7 +79,11 @@
        * @basemap {Hilo.Bitmap}   [底图对象]
        */
         addBaseMap: function (basemap) {
-            this.baseMap = true;
+            debugger;
+            if (this.baseMap) {
+                this.removeChild(this.baseMap);
+            }
+            this.baseMap = basemap;
             this.addChild(basemap);
         },
         /**
@@ -257,11 +261,13 @@
                 var selectedCtrl = that.selectedCtrl;
                 var ctrlList = that.ctrlList;
                 var data = $("#valueField").val();
+                var color = $("#colorFiled").val();
                 var ctlLength = ctrlList.length;
                 for (var i = 0; i < ctlLength; i++) {
                     if (ctrlList[i].target.id == selectedCtrl.id) {
                         ctrlList[i].info.data = data;
-                        $("#" + ctrlList[i].target.id).find("span").text("{{" + data + "}}");
+                        ctrlList[i].info.color = color;
+                        $("#" + ctrlList[i].target.id).find("span").text("{{" + data + "}}").css("color", color);
                         break;
                     }
                 }

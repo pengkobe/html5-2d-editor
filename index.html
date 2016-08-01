@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf8" />
     <title>简单监控画面制作</title>
@@ -50,6 +51,8 @@
             <!-- 值控件(参数名称) -->
             <label for="valueField">字段名称：</label>
             <input type="text" name="valueField" id="valueField" placeholder="字段名称" />
+            <label for="valueField">颜色：</label>
+            <input type="color" name="colorFiled" id="colorFiled" value="#156a33">
             <input type="button" id="value_submit" value="保存" />
         </div>
 
@@ -142,11 +145,11 @@
     <script type="text/javascript" src="./src/js/lib/jquery.min.js"></script>
     <script type="text/javascript" src="./src/js/lib/hilo-standalone.min.js"></script>
 
-    <script type="text/javascript" src="./src/js/init.js"></script>
-    <script type="text/javascript" src="./src/js/asset.js"></script>
-    <script type="text/javascript" src="./src/js/readyscene.js"></script>
-    <script type="text/javascript" src="./src/js/ctlFactory.js"></script>
 
+    <script type="text/javascript" src="./src/js/dev/init.js"></script>
+    <script type="text/javascript" src="./src/js/dev/scene.js"></script>
+    <script type="text/javascript" src="./src/js/asset.js"></script>
+    <script type="text/javascript" src="./src/js/ctlFactory.js"></script>
 </body>
 
 </html>

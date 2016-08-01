@@ -57,7 +57,9 @@
             this.initScenes();
             this.ready();
         },
-
+        /**
+        * 事件绑定
+        */
         binEvents: function () {
             var that = this;
 
@@ -100,7 +102,6 @@
                     default: return;
                 }
                 that.readyScene.addCtrl(ctrl, ctrInfo);
-
             }
             // ======= 控件拖放(END)  =======
         },
@@ -169,7 +170,7 @@
             };
         },
         /**
-        *  初始化场景
+        * 初始化场景
         */
         initScenes: function () {
             this.readyScene = new Editor_2d.ReadyScene({
@@ -179,7 +180,7 @@
             }).addTo(this.stage);
         },
         /**
-        *  用户交互
+        * 用户交互
         */
         onUserInput: function (e) {
             if (this.state !== 'over') {
@@ -194,7 +195,7 @@
             }
         },
         /**
-        *  场景准备完毕
+        * 场景准备完毕
         */
         ready: function () {
             this.state = 'ready';

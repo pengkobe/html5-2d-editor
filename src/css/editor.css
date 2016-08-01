@@ -317,7 +317,7 @@ body, div, canvas{
     box-shadow: 10px 10px 25px #ccc;
 }
 .drag-element{
-       box-shadow: 10px 10px 25px #ccc;
+    box-shadow: 10px 10px 25px #ccc;
 }
 .drag-clock{
     width: 10px; height: 10px; 
@@ -326,6 +326,10 @@ body, div, canvas{
     position: absolute;right: 0; bottom: 0; 
     background-color: #09C; 
 }
-
+.breakword{
+    word-wrap: break-word;
+    -ms-word-wrap: break-word;
+    word-break: break-all;
+}
 
 

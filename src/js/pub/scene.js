@@ -28,7 +28,6 @@
         },
         // 绑定后台数据
         bindData: function (data) {
-
         },
 
     });

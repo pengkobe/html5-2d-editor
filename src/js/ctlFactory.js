@@ -5,10 +5,10 @@
 (function (ns) {
     var CtrlCount = 1;
     var ctlFactory = ns.ctlFactory = {
-      /**
-       * 获取值控件
-       * @options {Object} [配置]
-       */
+        /**
+         * 获取值控件
+         * @options {Object} [配置]
+         */
         getValue: function (options) {
             var _default = {
                 x: 0,
@@ -24,9 +24,8 @@
                 }
             }
 
-
             var font = "18px arial";
-            var content = '<span>' + opts.name + '</span><div class="drag-clock"></div>';
+            var content = '<span class="breakword">' + opts.name + '</span><div class="drag-clock"></div>';
             var elem = new Hilo.DOMElement({
                 id: "value_" + CtrlCount,
                 class: "drag-element",
@@ -47,6 +46,49 @@
             CtrlCount++;
             return elem;
         },
+
+        /**
+         * 获取开关状态控件
+         * @options {Object} [配置]
+         */
+        getSwitch: function (options) {
+            var _default = {
+                x: 0,
+                y: 0,
+                width: 100,
+                height: 40,
+                name: '开关控件'
+            };
+            var opts = options || {};
+            for (var k in _default) {
+                if (typeof opts[k] === 'undefined') {
+                    opts[k] = _default[k];
+                }
+            }
+
+            var font = "18px arial";
+            var content = '<span class="breakword">' + opts.name + '</span><div class="drag-clock"></div>';
+            var elem = new Hilo.DOMElement({
+                id: "value_" + CtrlCount,
+                class: "drag-element",
+                element: Hilo.createElement('div', {
+                    innerHTML: content,
+                    style: {
+                        position: 'absolute',
+                        font: font,
+                        color: "#fff",
+                        background: "#000",
+                    }
+                }),
+                width: opts.width,
+                height: opts.height,
+                x: opts.x,
+                y: opts.y,
+            });
+            CtrlCount++;
+            return elem;
+        },
+
         /**
        * 获取单位控件
        * @options {Object} [配置]
@@ -66,9 +108,8 @@
                 }
             }
 
-
             var font = "14px arial";
-            var content = opts.name;
+            var content = '<span  class="breakword">' + opts.name + '</span><div class="drag-clock"></div>';
             var elem = new Hilo.DOMElement({
                 id: "unit_" + CtrlCount,
                 class: "drag-element",
@@ -77,7 +118,7 @@
                     style: {
                         position: 'absolute',
                         font: font,
-                        color: "#fff",
+                        color: "#777",
                     }
                 }),
                 width: opts.width,
@@ -108,7 +149,7 @@
             }
 
             var font = "14px arial bold";
-            var content = _default.name;
+            var content = '<span  class="breakword">' + _default.name + '</span><div class="drag-clock"></div>';
             var elem = new Hilo.DOMElement({
                 id: "label_" + CtrlCount,
                 class: "drag-element",
@@ -122,7 +163,8 @@
                 width: opts.width,
                 height: opts.height,
                 x: opts.x,
-                y: opts.y,
+                y: opts.y,        	
+                scaleX:0.8,scaleY:0.8//缩放约定
             });
             CtrlCount++;
             return elem;
