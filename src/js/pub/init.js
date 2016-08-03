@@ -80,10 +80,11 @@
         */
         ajaxLoadData: function () {
             // 从服务端拉取数据
-            var dataJson =null;// window.localStorage.getItem("monitorPageData");
+            var dataJson = window.localStorage.getItem("monitorPageData");
             if (!dataJson) {
-                dataJson = '{"valueCtrls":[{"name":"dddd","x":126,"y":91,"height":73,"width":120}],"unitCtrls":[{"name":"dx","x":255,"y":128,"height":35,"width":100}],"labelCtrls":[{"name":"lx","x":125,"y":168,"height":35,"width":100}]}'
-            }
+               // dataJson = '{"valueCtrls":[{"name":"dddd","x":126,"y":91,"height":73,"width":120}],"unitCtrls":[{"name":"dx","x":255,"y":128,"height":35,"width":100}],"labelCtrls":[{"name":"lx","x":125,"y":168,"height":35,"width":100}]}'
+                dataJson='{"valueCtrls":[{"x":142,"y":33,"height":51,"width":114},{"x":909,"y":336,"height":40,"width":100}],"unitCtrls":[{"x":135,"y":159,"height":35,"width":100}],"labelCtrls":[{"x":155,"y":264,"height":35,"width":100}],"switchCtrls":[{"x":369,"y":34,"height":51,"width":115},{"x":979,"y":45,"height":40,"width":100}]}';    
+        }
             var dataObj = JSON.parse(dataJson);
             // 值控件
             var valueCtrls = dataObj.valueCtrls;
@@ -107,6 +108,13 @@
             for (var i in labelCtrls) {
                 ctrl = Editor_2d.ctlFactory.getLabel(labelCtrls[i]);
                 this.customerScene.addCtrl(ctrl, "labelComp");
+            }
+
+             // 开关控件
+            var switchCtrls = dataObj.switchCtrls;
+            for (var i in switchCtrls) {
+                ctrl = Editor_2d.ctlFactory.getSwitch(switchCtrls[i]);
+                this.customerScene.addCtrl(ctrl, "switchComp");
             }
         },
         /**

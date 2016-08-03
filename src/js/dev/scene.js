@@ -79,7 +79,6 @@
        * @basemap {Hilo.Bitmap}   [底图对象]
        */
         addBaseMap: function (basemap) {
-            debugger;
             if (this.baseMap) {
                 this.removeChild(this.baseMap);
             }
@@ -154,19 +153,16 @@
         switchCtrlInput: function (type, ctrlList, target) {
             switch (type) {
                 case "value":
-                    $("#label_block").hide();
-                    $("#unit_block").hide();
-                    $("#value_block").show();
+                    $("#value_block").show().siblings().hide();
                     break;
                 case "unit":
-                    $("#label_block").hide();
-                    $("#unit_block").show();
-                    $("#value_block").hide();
+                    $("#unit_block").show().siblings().hide();
                     break;
                 case "label":
-                    $("#label_block").show();
-                    $("#unit_block").hide();
-                    $("#value_block").hide();
+                    $("#label_block").show().siblings().hide();
+                    break;
+                case "switch":
+                    $("#switch_block").show().siblings().hide();
                     break;
                 default:
                     that.selectedCtrl = null;
@@ -187,6 +183,9 @@
                             break;
                         case "labelComp":
                             $("#labelField").val(data);
+                            break;
+                        case "switchComp":
+                            $("#switchField").val(data);
                             break;
                         default: return;
                     }
@@ -272,6 +271,22 @@
                     }
                 }
             });
+
+             $("#switch_submit").on('click', function () {
+                var selectedCtrl = that.selectedCtrl;
+                var ctrlList = that.ctrlList;
+                var data = $("#switchField").val();
+                var color = $("#colorFiled").val();
+                var ctlLength = ctrlList.length;
+                for (var i = 0; i < ctlLength; i++) {
+                    if (ctrlList[i].target.id == selectedCtrl.id) {
+                        ctrlList[i].info.data = data;
+                        ctrlList[i].info.color = color;
+                        $("#" + ctrlList[i].target.id).find("span").text("{{" + data + "}}").css("color", color);
+                        break;
+                    }
+                }
+            });
         },
         /**
         * 提交监控画面
@@ -281,7 +296,8 @@
             var data = {   // {name,x,y}
                 valueCtrls: [],
                 unitCtrls: [],
-                labelCtrls: []
+                labelCtrls: [],
+                switchCtrls:[]
             };
             var ctrlList = this.ctrlList;
             var ctlLength = ctrlList.length;
@@ -308,6 +324,13 @@
                         break;
                     case "labelComp":
                         data.labelCtrls.push({
+                            name: ctrl.info.data,
+                            x: ctrl.target.x, y: ctrl.target.y,
+                            height: ctrl.target.height, width: ctrl.target.width
+                        });
+                        break;
+                     case "switchComp":
+                        data.switchCtrls.push({
                             name: ctrl.info.data,
                             x: ctrl.target.x, y: ctrl.target.y,
                             height: ctrl.target.height, width: ctrl.target.width

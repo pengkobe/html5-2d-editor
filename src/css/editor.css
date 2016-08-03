@@ -32,6 +32,7 @@ button {
     font-size: 28px;
     line-height: 48px;
     color: #FFF;
+    float: right;
 }
 .header h1 span {
     font-size: 12px;

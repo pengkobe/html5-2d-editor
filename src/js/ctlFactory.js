@@ -69,7 +69,7 @@
             var font = "18px arial";
             var content = '<span class="breakword">' + opts.name + '</span><div class="drag-clock"></div>';
             var elem = new Hilo.DOMElement({
-                id: "value_" + CtrlCount,
+                id: "switch_" + CtrlCount,
                 class: "drag-element",
                 element: Hilo.createElement('div', {
                     innerHTML: content,

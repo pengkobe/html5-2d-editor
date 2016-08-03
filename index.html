@@ -18,12 +18,22 @@
 
 <body lang="cn">
     <div class="header">
-        <input type="button" value="生成页面" id="submitPage" style="width:80px;height:50px;background-color:green;float:right;color:white;cursor:pointer"
+      
+
+
+
+         <input type="button" value="设施总览"  style="width:80px;height:35px;background-color:gray;color:white;cursor:pointer"
+        />
+         <input type="button" value="主机监控" style="width:80px;height:35px;background-color:gray;  color:white;cursor:pointer"
         />
         <!-- Github frame 
         <iframe allowtransparency="true" frameborder="0" scrolling="0" width="90px" height="20px" class="github-star"></iframe>
         <a href='https://github.com/pengkobe/contacts-nav/issues/new' target='_blank' class="lang">NEW ISSUE</a>-->
-        <h1><span>By <a href="http://eegrid.com" target="_blank">能效通网络</a></span></h1>
+         <h1><span>By <a href="http://eegrid.com" target="_blank">能效通网络</a></span></h1>
+          <input type="button" value="生成页面" id="submitPage" style="width:80px;height:50px;background-color:green;
+        float:right;color:white;cursor:pointer"
+        />
+
     </div>
     <!-- 打开文件 -->
     <div id="control">
@@ -35,6 +45,7 @@
     <div id="components">
         拖拽下列控件:
         <div draggable="true" id="valueCtrl" data-title="值控件" data-tag="valueComp">值控件(22321)</div>
+        <div draggable="true" id="switchCtrl" data-title="开关控件" data-tag="switchComp">开关控件</div>
         <div draggable="true" id="unitCtrl" data-title="单位控件" data-tag="unitComp">单位控件(kWh)</div>
         <div draggable="true" id="labelCtrl" data-title="标签控件" data-tag="labelComp">标签控件(压力)</div>
     </div>
@@ -68,6 +79,14 @@
             <label for="labelField">标签名称：</label>
             <input type="text" name="labelField" id="labelField" placeholder="标签名称" />
             <input type="button" id="label_submit" value="保存" />
+        </div>
+
+
+        <div id="switch_block" style="display:none">
+            <!-- 开关控件(名称) -->
+            <label for="switchField">开关名称：</label>
+            <input type="text" name="switchField" id="switchField" placeholder="标签名称" />
+            <input type="button" id="switch_submit" value="保存" />
         </div>
     </div>
     <script>
@@ -144,7 +163,6 @@
     <!-- lib -->
     <script type="text/javascript" src="./src/js/lib/jquery.min.js"></script>
     <script type="text/javascript" src="./src/js/lib/hilo-standalone.min.js"></script>
-
 
     <script type="text/javascript" src="./src/js/dev/init.js"></script>
     <script type="text/javascript" src="./src/js/dev/scene.js"></script>

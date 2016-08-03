@@ -99,6 +99,10 @@
                     case "labelComp":
                         ctrl = Editor_2d.ctlFactory.getLabel(position);
                         break;
+                    case "switchComp":
+                        ctrl = Editor_2d.ctlFactory.getSwitch(position);
+                        break;
+
                     default: return;
                 }
                 that.readyScene.addCtrl(ctrl, ctrInfo);
