@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf8" />
+    <meta name="HandheldFriendly" content="true" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+
+    <title>简单监控画面制作</title>
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="author" content="kobepeng" />
+    <meta name="email" content="yipeng.info@gmail.com" />
+    <link rel="stylesheet" type="text/css" href="lib/reset/reset.css">
+    <link rel="stylesheet" type="text/css" href="lib/static/history.css">
+
+</head>
+<!--[IF LT IE 9]>
+<h2 style="display:block;text-align:center;line-height:100px;">
+    您的浏览器版本过低，请使用 非IE浏览器 或 IE9以上的版本 或 切换到高速模式。</h2>
+<style>
+    body * {display:none;}
+</style>
+<![ENDIF]-->
+
+<body lang="cn">
+
+    <script>
+      // 弹出框
+        function m(msg) {
+            var mask = document.createElement("div");
+            mask.className = "mask";
+            var maskInfo = document.createElement("div");
+            maskInfo.className = "mask-info";
+            maskInfo.innerHTML = "<a href='#' id='maskInfoClose'>×</a>";
+            if (msg) {
+                maskInfo.innerHTML += msg;
+            } else {
+                if (isCN) {
+                    maskInfo.innerHTML += "欢迎体验使用监控画面编辑器，适用于底图＋简单控件的监控画面制作。<br />" +
+                        "<a href='#' target='_blank'>演示地址</a>"
+                }
+            }
+            document.body.appendChild(mask);
+            document.body.appendChild(maskInfo);
+            document.querySelector("#maskInfoClose").onclick = function (e) {
+                e.preventDefault();
+                mask.remove();
+                maskInfo.remove();
+            }
+        };
+    </script>
+    <!-- lib -->
+    <script src="lib/lib.js"></script>
+    <script src="boot.js?__inline"></script>
+</body>
+
+</html>

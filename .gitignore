@@ -1,0 +1,9 @@
+node_modules
+backup
+component_modules
+.DS_Store
+.idea
+*.bak
+*.tmp
+Thumbs.db
+output

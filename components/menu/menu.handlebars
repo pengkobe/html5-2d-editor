@@ -1,0 +1,11 @@
+    <!--<input type="button" class="devbrowser_button" value="设施总览" />
+    <input type="button" class="mainmachine_button" value="主机监控" />-->
+<div class="menu-list">
+    {{#each views}}
+        <a href="/#!/{{name}}" data-page="{{name}}"><i class="fa fa-{{icon}}"></i>{{label}}</a>
+    {{/each}}
+</div>
+    <!--<h1>
+        <span>By <a href="http://eegrid.com" target="_blank">能效通网络</a></span>
+    </h1>-->
+<input type="button" value="生成页面" id="submitPage" />
