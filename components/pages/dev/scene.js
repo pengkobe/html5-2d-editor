@@ -135,7 +135,7 @@ var ReadyScene = Hilo.Class.create({
                         var ele = document.getElementById(ctrlList[i].target.id);
                         ele.style.border = "none";
                     }
-                    // 选中样式()
+                    // 选中样式
                     var ele = document.getElementById(_id);
                     ele.style.border = "1px dotted red";
                     //  切换输入面板
@@ -270,7 +270,6 @@ var ReadyScene = Hilo.Class.create({
                 }
             }
         });
-
         $("#switch_submit").on('click', function () {
             var selectedCtrl = that.selectedCtrl;
             var ctrlList = that.ctrlList;
@@ -338,8 +337,8 @@ var ReadyScene = Hilo.Class.create({
                 default: return;
             }
         }
-        // 暂存至服务端
-
+        
+        // 暂存至localStorage
         var data = JSON.stringify(data);
         if (Hilo.browser.supportStorage) {
             window.localStorage.removeItem("monitorPageData");

@@ -33,7 +33,15 @@ function c(options) {
         scaleX: 0.8, scaleY: 0.8//缩放约定
     });
 
-    return elem;
+    return {
+        // 数据配置
+        type:"label",
+        info:{},
+        // 控件本身
+        dom:elem,
+        // 控件配置
+        opts:opts
+    }
 }
 
 module.exports = c;

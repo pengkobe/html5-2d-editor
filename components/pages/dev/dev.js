@@ -26,7 +26,6 @@ exports.render = function (dom) {
     setTimeout(function () {
         init();
     }, 20);
-
 };
 
 
