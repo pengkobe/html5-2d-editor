@@ -10,11 +10,14 @@ var Asset = Hilo.Class.create({
     ready: null,
     over: null,
 
-    load: function(){
+    load: function () {
+        var bg = __uri('img/bg.png');
+        var ground = __uri('img/ground.png');
+        var ready = __uri('img/ready.png');
         var resources = [
-            {id:'bg', src:'src/img/bg.png'},
-            {id:'ground', src:'src/img/ground.png'},
-            {id:'ready', src:'src/img/ready.png'},
+            { id: 'bg', src: bg },
+            { id: 'ground', src: ground },
+            { id: 'ready', src: ready },
         ];
         this.queue = new Hilo.LoadQueue();
         this.queue.add(resources);
@@ -22,7 +25,7 @@ var Asset = Hilo.Class.create({
         this.queue.start();
     },
 
-    onComplete: function(e){
+    onComplete: function (e) {
         this.bg = this.queue.get('bg').content;
         this.ground = this.queue.get('ground').content;
         this.ready = this.queue.get('ready').content;

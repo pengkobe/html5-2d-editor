@@ -4,7 +4,6 @@
 var extend = require('extend');
 var each = require('each');
 var menu = require('menu');
-var footer = require('footer');
 
 // 内部变量
 var lastView, timer;
@@ -56,17 +55,20 @@ exports.load = function (context, preload) {
     var name = context.params.page;
     var title = context.queries.title;
     name = this.has(name) ? name : '404';
+
     var container = document.getElementById('site-views');
     var pages = container.querySelectorAll('[data-page]');
     each(pages, function (dom) {
         var p = dom.getAttribute('data-page');
         if (p !== lastView) {
-            dom.innerHTML = '';
+           // 开启后，每次加载都会清空html
+           // dom.innerHTML = '';
         }
         var clazz = ' ' + dom.className;
         dom.className = clazz.replace(/\s+active\b/, '').trim();
     });
     menu.active(lastView = name);
+
     // 异步加载
     require.async(views[name], function (page) {
         //防止用户loading过程中多次切换
@@ -75,15 +77,14 @@ exports.load = function (context, preload) {
             if (dom) {
                 if (!dom.innerHTML) {
                     var content;
-                    if (typeof page.getMarkdown === 'function') {
-                        content = '<div class="site-view-inner markdown-body">' + page.getMarkdown() + '</div>';
+                    if (name === "404") {
+                        content = page.getHTML();
+                        dom.innerHTML = content;
                     } else {
-                        //content = page.getHTML();
+                        page.render(dom);
                     }
-                    //dom.innerHTML = content;
-                    debugger;
-                    page.render(dom);
                 }
+                // 页面切换动画
                 dom.className = dom.className + ' active';
                 if (typeof title !== 'undefined') {
                     var id = 'user-content-' + encodeURIComponent(title.toLowerCase());

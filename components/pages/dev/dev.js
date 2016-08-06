@@ -1,7 +1,9 @@
 'use strict';
 
 var each = require('each');
-var asset = require('./asset.js');
+var Asset = require('./asset.js');
+var Scene = require('./scene.js');
+var controls = require('controls');
 
 /**
  * 渲染menu模块
@@ -40,7 +42,7 @@ var Editor_2d = window.Editor_2d = {
     * 初始化静态资源
     */
     init: function () {
-       this.asset = asset;
+        this.asset = new Asset();
         this.asset.on('complete', function (e) {
             this.asset.off('complete');
             this.initStage();
@@ -113,17 +115,17 @@ var Editor_2d = window.Editor_2d = {
             var ctrl = null;
             var position = { x: x, y: y }
             switch (ctrInfo) {
-                case "valueComp":
-                    ctrl = Editor_2d.ctlFactory.getValue(position);
+                case "value":
+                    ctrl = controls.getValue(position);
                     break;
-                case "unitComp":
-                    ctrl = Editor_2d.ctlFactory.getUnit(position);
+                case "unit":
+                    ctrl = controls.getUnit(position);
                     break;
-                case "labelComp":
-                    ctrl = Editor_2d.ctlFactory.getLabel(position);
+                case "label":
+                    ctrl = controls.getLabel(position);
                     break;
-                case "switchComp":
-                    ctrl = Editor_2d.ctlFactory.getSwitch(position);
+                case "switch":
+                    ctrl = controls.getSwitch(position);
                     break;
 
                 default: return;
@@ -188,7 +190,7 @@ var Editor_2d = window.Editor_2d = {
     * 初始化场景
     */
     initScenes: function () {
-        this.readyScene = new Editor_2d.ReadyScene({
+        this.readyScene = new Scene({
             width: this.width,
             height: this.height,
             image: this.asset.ready
@@ -221,21 +223,20 @@ var Editor_2d = window.Editor_2d = {
 };
 
 function init() {
-       var src = document.getElementById("components");
-        src.ondragstart = function (e) {
-            var tag =e.target.getAttribute("data-tag");
-            e.dataTransfer.setData("text", tag);
+    var src = document.getElementById("components");
+    src.ondragstart = function (e) {
+        var tag = e.target.getAttribute("data-tag");
+        e.dataTransfer.setData("text", tag);
+    };
+    src.ondrag = function (e) { }
+    // 判断语言
+    var isCN = document.body.getAttribute("lang") == "cn";
+    // 判断浏览器
+    if (navigator.appVersion.indexOf("MSIE") > -1) {
+        HTMLElement.prototype.remove = HTMLElement.prototype.remove || function () {
+            this.parentNode && this.parentNode.removeChild(this);
         };
-        src.ondrag = function (e) {}
-        // 判断语言
-        var isCN = document.body.getAttribute("lang") == "cn";
-        // 判断浏览器
-        if (navigator.appVersion.indexOf("MSIE") > -1) {
-            HTMLElement.prototype.remove = HTMLElement.prototype.remove || function () {
-                this.parentNode && this.parentNode.removeChild(this);
-            };
-        };
-       
+    };
 
     Editor_2d.init();
 }

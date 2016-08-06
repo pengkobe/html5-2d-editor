@@ -26,9 +26,9 @@ require.async(['es5-safe', 'router', 'site', 'fastclick'], function (es5, router
         site.load(ctx);
     });
     
-    // 其他未命中情况
+    // 其他未命中情况(默认加载开发页面)
     router('*', function(){
-        router.replace('/index');
+        router.replace('/dev');
     });
     
     router();
