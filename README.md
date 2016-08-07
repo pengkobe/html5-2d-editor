@@ -1,2 +1,5 @@
 # html5-2d-editor
-build a 2d editor based on hilo!
+a 2d editor webapp for industry monitor page based on hilo & scrat!
+
+### License
+MIT
