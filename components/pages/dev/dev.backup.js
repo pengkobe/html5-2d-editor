@@ -113,8 +113,23 @@ var Editor_2d = window.Editor_2d = {
             var ctrInfo = e.dataTransfer.getData("text");
             var ctrl = null;
             var position = { x: x, y: y }
-            ctrl = controls.getControlByType(ctrInfo,position);
-            that.readyScene.addCtrl(ctrl);
+            switch (ctrInfo) {
+                case "value":
+                    ctrl = controls.getValue(position);
+                    break;
+                case "unit":
+                    ctrl = controls.getUnit(position);
+                    break;
+                case "label":
+                    ctrl = controls.getLabel(position);
+                    break;
+                case "switch":
+                    ctrl = controls.getSwitch(position);
+                    break;
+
+                default: return;
+            }
+            that.readyScene.addCtrl(ctrl, ctrInfo);
         }
         // ======= 控件拖放(END)  =======
     },

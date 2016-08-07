@@ -22,7 +22,7 @@ var ctlFactory = {
      * 获取开关状态控件
      * @options {Object} [配置]
      */
-    getSwitch: function (options) {
+    getState: function (options) {
         options.CtrlCount = ++CtrlCount;
         return state(options);
     },
@@ -42,6 +42,35 @@ var ctlFactory = {
     getLabel: function (options) {
         options.CtrlCount = ++CtrlCount;
         return label(options);
+    },
+
+    /**
+     * [getControlByType 按类型获取控件]
+     * @param  {[String]} type    [控件类型]
+     * @param  {[Object]} options [配置]
+     * @return {[Object]}         [控件对象]
+     */
+     getControlByType:function(type, options){
+        var ctrl;
+         switch (type) {
+                case "value":
+                    ctrl = this.getValue(options);
+                    break;
+                case "unit":
+                    ctrl = this.getUnit(options);
+                    break;
+                case "label":
+                    ctrl = this.getLabel(options);
+                    break;
+                case "state":
+                    ctrl = this.getState(options);
+                    break;
+
+                default: return;
+            }
+
+            return ctrl;
+
     }
 }
 

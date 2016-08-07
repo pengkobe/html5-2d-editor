@@ -8,7 +8,8 @@ var ReadyScene = Hilo.Class.create({
         ReadyScene.superclass.constructor.call(this, properties);
         this.init(properties);
     },
-    ctrlList: [],
+    // index: 1,
+    ctrlList: [], // {type: type, target: Ctrl,info: {}}
     baseMap: null,
     selectedCtrl: null,
     state: '', //move
@@ -45,13 +46,10 @@ var ReadyScene = Hilo.Class.create({
         $("#submitPage").on('click', function(e) {
             that.submitCtrlData();
         });
-
+        // 保存控件信息提交事件
+        this.saveCtrlData();
         // 鼠标移动事件
         this.moveCtrl();
-
-         // 保存控件信息提交事件
-        this.saveCtrlData();
-
         // 拖拽/放大选中元素
         $("#dragmoveCtrl").on('click', function() {
             that.selectedCtrl.startDrag();
@@ -88,22 +86,25 @@ var ReadyScene = Hilo.Class.create({
         this.baseMap = basemap;
         this.addChild(basemap);
     },
-
     /**
      * 添加控件
      * @Ctrl {Hilo.DOMElement}   [底图对象]
      * @type {String} [控件类型/value/unit/label]
      */
-    addCtrl: function(Ctrl) {
+    addCtrl: function(Ctrl, type) {
         if (!this.baseMap) {
             m("请先添加底图！");
             return;
         }
-        this.bindCtrlEvent(Ctrl.target);
-        this.addChild(Ctrl.target);
-        this.ctrlList.push(Ctrl);
+        this.bindCtrlEvent(Ctrl);
+        this.addChild(Ctrl);
+        var ctrlobj = {
+            type: type,
+            target: Ctrl,
+            info: {}
+        }
+        this.ctrlList.push(ctrlobj);
     },
-
     /**
      * 控件事件
      * @Ctrl {Hilo.DOMElement}   [底图对象]
@@ -132,12 +133,10 @@ var ReadyScene = Hilo.Class.create({
 
                     var ctrlList = that.ctrlList;
                     var ctlLength = ctrlList.length;
-
                     for (var i = 0; i < ctlLength; i++) {
                         var ele = document.getElementById(ctrlList[i].target.id);
                         ele.style.border = "none";
                     }
-
                     // 选中样式
                     var ele = document.getElementById(_id);
                     ele.style.border = "1px dotted red";
@@ -146,7 +145,56 @@ var ReadyScene = Hilo.Class.create({
                 }
             }.bind(this));
     },
+    /**
+     * 控件信息输入面板切换
+     * @type {String} [控件类型/value/unit/label]
+     * @ctrlList {Array} [控件列表]
+     * @target {Object} [当前选中控件]
+     */
+    switchCtrlInput: function(type, ctrlList, target) {
+        switch (type) {
+            case "value":
+                $("#value_block").show().siblings().hide();
+                break;
+            case "unit":
+                $("#unit_block").show().siblings().hide();
+                break;
+            case "label":
+                $("#label_block").show().siblings().hide();
+                break;
+            case "switch":
+                $("#switch_block").show().siblings().hide();
+                break;
+            default:
+                that.selectedCtrl = null;
+                return;
+        }
 
+        // 设置信息输入框值
+        var ctlLength = ctrlList.length;
+        for (var i = 0; i < ctlLength; i++) {
+            if (ctrlList[i].target.id == target.id) {
+                var data = ctrlList[i].info.data;
+                switch (ctrlList[i].type) {
+                    case "value":
+                        $("#valueField").val(data);
+                        break;
+                    case "unit":
+                        $("#unitField").val(data);
+                        break;
+                    case "label":
+                        $("#labelField").val(data);
+                        break;
+                    case "switch":
+                        $("#switchField").val(data);
+                        break;
+                    default:
+                        return;
+                }
+                break;
+            }
+        }
+    },
     /**
      * 鼠标微调
      */
@@ -172,7 +220,6 @@ var ReadyScene = Hilo.Class.create({
         }
         document.onkeydown = move;
     },
-
     /**
      * 删除控件
      * @Ctrl {Hilo.DOMElement}   [控件]
@@ -180,56 +227,80 @@ var ReadyScene = Hilo.Class.create({
     removeCtrl: function(Ctrl) {
         this.removeChild(Ctrl);
     },
-
-    /**
-     * 控件信息输入面板切换
-     * @type {String} [控件类型/value/unit/label]
-     * @ctrlList {Array} [控件列表]
-     * @target {Object} [当前选中控件]
-     */
-    switchCtrlInput: function(type, ctrlList, target) {
-        var ctlLength = ctrlList.length;
-        for (var i = 0; i < ctlLength; i++) {
-            if (ctrlList[i].type == type) {
-                $(".paramInput").html(ctrlList[i].inputdDom);
-                break;
-            }
-        }
-
-        // 设置信息输入框值
-        var ctlLength = ctrlList.length;
-        for (var i = 0; i < ctlLength; i++) {
-            if (ctrlList[i].target.id == target.id) {
-                ctrlList[i].setDomData();
-                break;
-            }
-        }
-    },
-
     /**
      * 保存控件配置
      */
     saveCtrlData: function() {
         var that = this;
-        $("#input_submit").on('click', function() {
+        $("#label_submit").on('click', function() {
             var selectedCtrl = that.selectedCtrl;
             var ctrlList = that.ctrlList;
+            var data = $("#labelField").val();
             var ctlLength = ctrlList.length;
             for (var i = 0; i < ctlLength; i++) {
                 if (ctrlList[i].target.id == selectedCtrl.id) {
-                    ctrlList[i].setInfo();
+                    ctrlList[i].info.data = data;
+                    $("#" + ctrlList[i].target.id).html(data);
+                    break;
+                }
+            }
+
+        });
+        $("#unit_submit").on('click', function() {
+            var selectedCtrl = that.selectedCtrl;
+            var ctrlList = that.ctrlList;
+            var data = $("#unitField").val();
+            var ctlLength = ctrlList.length;
+            for (var i = 0; i < ctlLength; i++) {
+                if (ctrlList[i].target.id == selectedCtrl.id) {
+                    ctrlList[i].info.data = data;
+                    $("#" + ctrlList[i].target.id).html(data);
+                    break;
+                }
+            }
+        });
+        $("#value_submit").on('click', function() {
+            var selectedCtrl = that.selectedCtrl;
+            var ctrlList = that.ctrlList;
+            var data = $("#valueField").val();
+            var color = $("#colorFiled").val();
+            var ctlLength = ctrlList.length;
+            for (var i = 0; i < ctlLength; i++) {
+                if (ctrlList[i].target.id == selectedCtrl.id) {
+                    ctrlList[i].info.data = data;
+                    ctrlList[i].info.color = color;
+                    $("#" + ctrlList[i].target.id).find("span").text("{{" + data + "}}").css("color", color);
+                    break;
+                }
+            }
+        });
+        $("#switch_submit").on('click', function() {
+            var selectedCtrl = that.selectedCtrl;
+            var ctrlList = that.ctrlList;
+            var data = $("#switchField").val();
+            var color = $("#colorFiled").val();
+            var ctlLength = ctrlList.length;
+            for (var i = 0; i < ctlLength; i++) {
+                if (ctrlList[i].target.id == selectedCtrl.id) {
+                    ctrlList[i].info.data = data;
+                    ctrlList[i].info.color = color;
+                    $("#" + ctrlList[i].target.id).find("span").text("{{" + data + "}}").css("color", color);
                     break;
                 }
             }
         });
     },
-
     /**
-     * [submitCtrlData 提交监控画面]
-     * @return {[void]} []
+     * 提交监控画面
      */
     submitCtrlData: function() {
-        var result=[];
+        var ctrlList = this.ctrlList;
+        var data = { // {name,x,y}
+            valueCtrls: [],
+            unitCtrls: [],
+            labelCtrls: [],
+            switchCtrls: []
+        };
         var ctrlList = this.ctrlList;
         var ctlLength = ctrlList.length;
         for (var i = 0; i < ctlLength; i++) {
@@ -238,13 +309,50 @@ var ReadyScene = Hilo.Class.create({
                 m("信息输入不完整");
                 return;
             }
-            var ret = ctrl.getFinalState();
-
-            result.push(ret);
+            switch (ctrlList[i].type) {
+                case "value":
+                    data.valueCtrls.push({
+                        name: ctrl.info.data,
+                        x: ctrl.target.x,
+                        y: ctrl.target.y,
+                        height: ctrl.target.height,
+                        width: ctrl.target.width
+                    });
+                    break;
+                case "unit":
+                    data.unitCtrls.push({
+                        name: ctrl.info.data,
+                        x: ctrl.target.x,
+                        y: ctrl.target.y,
+                        height: ctrl.target.height,
+                        width: ctrl.target.width
+                    });
+                    break;
+                case "label":
+                    data.labelCtrls.push({
+                        name: ctrl.info.data,
+                        x: ctrl.target.x,
+                        y: ctrl.target.y,
+                        height: ctrl.target.height,
+                        width: ctrl.target.width
+                    });
+                    break;
+                case "switch":
+                    data.switchCtrls.push({
+                        name: ctrl.info.data,
+                        x: ctrl.target.x,
+                        y: ctrl.target.y,
+                        height: ctrl.target.height,
+                        width: ctrl.target.width
+                    });
+                    break;
+                default:
+                    return;
+            }
         }
 
         // 暂存至localStorage
-        var data = JSON.stringify(result);
+        var data = JSON.stringify(data);
         if (Hilo.browser.supportStorage) {
             window.localStorage.removeItem("monitorPageData");
             window.localStorage.setItem("monitorPageData", data);

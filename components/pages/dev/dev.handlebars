@@ -8,7 +8,7 @@
   <div id="components">
     控件列表
     <div draggable="true"  data-title="值控件" data-tag="value">值控件(22321)</div>
-    <div draggable="true"  data-title="开关控件" data-tag="switch">开关控件</div>
+    <div draggable="true"  data-title="开关控件" data-tag="state">开关控件</div>
     <div draggable="true"  data-title="单位控件" data-tag="unit">单位控件(kWh)</div>
     <div draggable="true"  data-title="标签控件" data-tag="label">标签控件(压力)</div>
   </div>
@@ -21,34 +21,6 @@
 
   <!-- 参数面板 -->
   <div class="paramPanel">
-    <div id="value_block" style="display:none">
-      <!-- 值控件(参数名称) -->
-      <label for="valueField">字段名称：</label>
-      <input type="text" name="valueField" id="valueField" placeholder="字段名称" />
-      <label for="valueField">颜色：</label>
-      <input type="color" name="colorFiled" id="colorFiled" value="#156a33">
-      <input type="button" id="value_submit" value="保存" />
-    </div>
-
-    <div id="unit_block" style="display:none">
-      <!-- 单位控件(名称) -->
-      <label for="unitField">单位名称：</label>
-      <input type="text" name="unitField" id="unitField" placeholder="单位名称" />
-      <input type="button" id="unit_submit" value="保存" />
-    </div>
-
-    <div id="label_block" style="display:none">
-      <!-- 标签控件(名称) -->
-      <label for="labelField">标签名称：</label>
-      <input type="text" name="labelField" id="labelField" placeholder="标签名称" />
-      <input type="button" id="label_submit" value="保存" />
-    </div>
-
-
-    <div id="switch_block" style="display:none">
-      <!-- 开关控件(名称) -->
-      <label for="switchField">开关名称：</label>
-      <input type="text" name="switchField" id="switchField" placeholder="标签名称" />
-      <input type="button" id="switch_submit" value="保存" />
-    </div>
+    <div class="paramInput"></div>
+    <input type="button" id="input_submit" value="保存" />
   </div>
