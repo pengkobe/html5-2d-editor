@@ -1,11 +1,32 @@
     <!--<input type="button" class="devbrowser_button" value="设施总览" />
-    <input type="button" class="mainmachine_button" value="主机监控" />-->
+    <input type="button" class="mainmachine_button" value="主机监控" />
 <div class="menu-list">
     {{#each views}}
         <a href="/#!/{{name}}" data-page="{{name}}"><i class="fa fa-{{icon}}"></i>{{label}}</a>
     {{/each}}
-</div>
+</div>-->
     <!--<h1>
         <span>By <a href="http://eegrid.com" target="_blank">能效通网络</a></span>
-    </h1>-->
-<input type="button" value="生成页面" id="submitPage" />
+   
+<input type="button" value="生成页面" id="submitPage" /> </h1>-->
+<nav class="nav has-shadow">
+  <div class="container">
+    <div class="nav-left">
+   <!--  is-active"-->
+    {{#each views}}
+        <a class="nav-item is-tab" href="/#!/{{name}}" data-page="{{name}}"><i class="fa fa-{{icon}}"></i>{{label}}</a>
+    {{/each}}
+    </div>
+  </div>
+
+   <div class="nav-right nav-menu">
+    <span class="nav-item">
+      <a class="button"  id="submitPage" href="javascript:void(0)">
+        <span class="icon">
+          <i class="fa fa-download"></i>
+        </span>
+        <span>生成页面</span>
+      </a>
+    </span>
+  </div>
+</nav>

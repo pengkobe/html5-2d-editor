@@ -238,16 +238,19 @@ var ReadyScene = Hilo.Class.create({
                 m("信息输入不完整");
                 return;
             }
-            var ret = ctrl.getFinalState();
+            var ret = ctrl.setFinalState();
 
             result.push(ret);
         }
 
         // 暂存至localStorage
         var data = JSON.stringify(result);
+
+debugger;
+
         if (Hilo.browser.supportStorage) {
-            window.localStorage.removeItem("monitorPageData");
-            window.localStorage.setItem("monitorPageData", data);
+            // window.localStorage.removeItem("monitorPageData");
+            // window.localStorage.setItem("monitorPageData", data);
         }
     }
 });

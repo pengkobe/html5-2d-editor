@@ -5,6 +5,8 @@ var Asset = require('./asset.js');
 var Scene = require('./scene.js');
 var controls = require('controls');
 
+// 在require函数中可以使用相对路径引用文件
+// 注意：不可以省略后缀名
 /**
  * 渲染menu模块
  * @param {HTMLElement} dom
@@ -13,7 +15,7 @@ exports.render = function (dom) {
     // 使用__inline函数嵌入其他文件、图片。这里用作内嵌模板，
     // scrat已经配置了对handlebars后置的文件进行预编译，因此
     // 可以直接内嵌这里文件当做js函数执行
-    var tpl = __inline('dev.handlebars');
+    var tpl = __inline('public.handlebars');
     // 模板数据
     var data = {
         // 使用__uri函数来定位任意工程文件，scrat构建之后，会
@@ -29,14 +31,15 @@ exports.render = function (dom) {
 };
 
 
-var Editor_2d = window.Editor_2d = {
+var Editor_2d = {
     width: 0,
     height: 0,
 
     asset: null,
     stage: null,
     ticker: null,
-    readyScene: null,
+    customerScene: null,
+    valueRefreshArr: [],  // 值控件
     /**
     * 初始化静态资源
     */
@@ -53,8 +56,7 @@ var Editor_2d = window.Editor_2d = {
     */
     initStage: function () {
         var that = this;
-
-        var container = document.getElementById("box");
+        var box = document.getElementById("box_cus");
         this.width = window.innerWidth - 300;
         this.height = 720;
         this.scale = 1;
@@ -67,20 +69,25 @@ var Editor_2d = window.Editor_2d = {
             scaleX: this.scale,
             scaleY: this.scale
         });
-        container.appendChild(this.stage.canvas);
-        // 事件绑定(拖拽等)
+        box.appendChild(this.stage.canvas);
+        // 事件绑定
         this.binEvents();
+        // 加载场景
+        this.initScenes();
+        // 从服务端拉取数据
+        this.ajaxLoadData();
 
         //启动计时器
         this.ticker = new Hilo.Ticker(60);
         this.ticker.addTick(Hilo.Tween);
         this.ticker.addTick(this.stage);
         this.ticker.start();
-
-        //舞台更新事件
+        //舞台更新
         this.stage.onUpdate = this.onUpdate.bind(this);
-        this.initScenes();
+        // 开始
         this.ready();
+        // 刷新数据
+        this.dataRefresh();
     },
     /**
     * 事件绑定
@@ -89,72 +96,67 @@ var Editor_2d = window.Editor_2d = {
         var that = this;
         //开启事件交互
         this.stage.enableDOMEvent([Hilo.event.POINTER_START, Hilo.event.POINTER_MOVE, Hilo.event.POINTER_END]);
-        this.stage.on(Hilo.event.POINTER_START,
-            this.onUserInput.bind(this));
-
         // 舞台自适应宽高
         window.addEventListener("resize", resizeStage, false);
         function resizeStage() {
             that.stage.resize(window.innerWidth - 300, 720, true);
         }
-
-        // ======= 控件拖放(BEGIN) =======
-        box.ondragenter = function (e) {
-            e.preventDefault();
-        }
-        box.ondragover = function (e) {
-            e.preventDefault();
-        }
-        // 添加控件
-        box.ondrop = function (e) {
-            e.preventDefault();
-            var x = e.layerX;
-            var y = e.layerY;
-            var ctrInfo = e.dataTransfer.getData("text");
-            var ctrl = null;
-            var position = { x: x, y: y }
-            switch (ctrInfo) {
-                case "value":
-                    ctrl = controls.getValue(position);
-                    break;
-                case "unit":
-                    ctrl = controls.getUnit(position);
-                    break;
-                case "label":
-                    ctrl = controls.getLabel(position);
-                    break;
-                case "switch":
-                    ctrl = controls.getSwitch(position);
-                    break;
-
-                default: return;
-            }
-            that.readyScene.addCtrl(ctrl, ctrInfo);
-        }
-        // ======= 控件拖放(END)  =======
     },
     /**
-    * 加载底图[背景法](废弃)
+    * 加载数据
     */
-    initBackground: function () {
+    ajaxLoadData: function () {
+        var ctrl;
+        // 从服务端拉取数据
+        var dataJson = window.localStorage.getItem("monitorPageData");
+        if (!dataJson) {
+            dataJson = '{"valueCtrls":[{"x":142,"y":33,"height":51,"width":114},{"x":909,"y":336,"height":40,"width":100}],"unitCtrls":[{"x":135,"y":159,"height":35,"width":100}],"labelCtrls":[{"x":155,"y":264,"height":35,"width":100}],"switchCtrls":[{"x":369,"y":34,"height":51,"width":115},{"x":979,"y":45,"height":40,"width":100}]}';
+        }
+        var dataObj = JSON.parse(dataJson);
+        // 值控件
+        var valueCtrls = dataObj.valueCtrls;
+        for (var i in valueCtrls) {
+            ctrl = controls.getValue(valueCtrls[i]);
+            var ctrlId = ctrl.id;
+            var bindName = valueCtrls[i].name;
+            this.valueRefreshArr.push({ ctrlId: ctrlId, bindName: bindName });
+            this.customerScene.addCtrl(ctrl, "valueComp");
+        }
+
+        // 单位控件
+        var unitCtrls = dataObj.unitCtrls;
+        for (var i in unitCtrls) {
+            ctrl = controls.getUnit(unitCtrls[i]);
+            this.customerScene.addCtrl(ctrl, "unitComp");
+        }
+
+        // 标签控件
+        var labelCtrls = dataObj.labelCtrls;
+        for (var i in labelCtrls) {
+            ctrl = controls.getLabel(labelCtrls[i]);
+            this.customerScene.addCtrl(ctrl, "labelComp");
+        }
+
+        // 开关控件
+        var switchCtrls = dataObj.switchCtrls;
+        for (var i in switchCtrls) {
+            ctrl = controls.getSwitch(switchCtrls[i]);
+            this.customerScene.addCtrl(ctrl, "switchComp");
+        }
     },
     /**
     * 加载底图
     */
     addBaseMap: function () {
         var that = this;
-        var openfile = document.querySelector("#openFileButton"),
-            file = document.querySelector("#file")
+        var file = document.querySelector("#file_cus")
         file.onchange = function (e) {
             var resultFile = e.target.files[0];
             if (!/image/.test(resultFile.type)) {
                 m("抱歉，暂时不支持非图片格式，后续会加强的！");
                 return;
             }
-            if (openfile) {
-                openfile.setAttribute("loading", "yes");
-                openfile.innerHTML = "Loading...";
-            }
+
             if (resultFile) {
                 var reader = new FileReader();
                 reader.readAsDataURL(resultFile);
@@ -172,35 +174,23 @@ var Editor_2d = window.Editor_2d = {
                             y: 0,
                             scaleY: 0.9
                         });
-                        that.readyScene.addBaseMap(bmp);
+                        that.customerScene.addBaseMap(bmp);
                         file.blur();
                         openfile && openfile.remove();
                     }
                 };
             }
         };
-        // 打开文件
-        openfile.onclick = function () {
-            if (openfile.getAttribute("loading") == "yes") return;
-            file.click();
-        };
     },
     /**
-    * 初始化场景
+    *  初始化场景
     */
     initScenes: function () {
-        this.readyScene = new Scene({
+        this.customerScene = new Scene({
             width: this.width,
             height: this.height,
             image: this.asset.ready
         }).addTo(this.stage);
-    },
-    /**
-    * 用户交互
-    */
-    onUserInput: function (e) {
-        if (this.state !== 'over') {
-        }
     },
     /**
     *  场景刷新
@@ -211,31 +201,39 @@ var Editor_2d = window.Editor_2d = {
         }
     },
     /**
-    * 场景准备完毕
+    *  场景切换
     */
     ready: function () {
         this.state = 'ready';
-        // 加载底图事件
         this.addBaseMap();
-        this.readyScene.visible = true;
+        this.customerScene.visible = true;
     },
+    /**
+    * 数据刷新
+    */
+    dataRefresh: function () {
+        var that = this;
+        this.state = 'beginning';
+        // 刷新值数据
+        var data = {
+            value1: 123,
+            value2: "停止",
+            value3: "正常区",
+        }
+        var cha = 1;
+        setInterval(function (params) {
+            for (var i = 0; i < that.valueRefreshArr.length; i++) {
+                var temp = that.valueRefreshArr[i];
+                var value = data[temp.bindName];
+                if (value) {
+                    $("#" + temp.ctrlId).html(value + cha);
+                }
+                cha++;
+            }
+        }, 5000);
+    }
 };
 
 function init() {
-    var src = document.getElementById("components");
-    src.ondragstart = function (e) {
-        var tag = e.target.getAttribute("data-tag");
-        e.dataTransfer.setData("text", tag);
-    };
-    src.ondrag = function (e) { }
-    // 判断语言
-    var isCN = document.body.getAttribute("lang") == "cn";
-    // 判断浏览器
-    if (navigator.appVersion.indexOf("MSIE") > -1) {
-        HTMLElement.prototype.remove = HTMLElement.prototype.remove || function () {
-            this.parentNode && this.parentNode.removeChild(this);
-        };
-    };
-
     Editor_2d.init();
 }

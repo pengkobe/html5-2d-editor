@@ -23,7 +23,7 @@ var CustomerScene = Hilo.Class.create({
    * @Ctrl {Hilo.DOMElement}   [底图对象]
    * @type {String} [控件类型/valueComp/unitComp/labelComp]
    */
-    addCtrl: function (Ctrl) {
+    addCtrl: function (Ctrl, type) {
         this.addChild(Ctrl);
     },
     // 绑定后台数据

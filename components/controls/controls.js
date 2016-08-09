@@ -3,6 +3,7 @@ var label = require('./label/label.js');
 var unit = require('./unit/unit.js');
 var value = require('./value/value.js');
 var state = require('./state/state.js');
+var device = require('./device/device.js');
 
 /**
  * 控件工厂
@@ -45,31 +46,42 @@ var ctlFactory = {
     },
 
     /**
+    * [getDevice 获取设备控件]
+    * @param  {[Object]} options [配置]
+    */
+    getDevice: function (options) {
+        options.CtrlCount = ++CtrlCount;
+        return device(options);
+    },
+
+    /**
      * [getControlByType 按类型获取控件]
      * @param  {[String]} type    [控件类型]
      * @param  {[Object]} options [配置]
      * @return {[Object]}         [控件对象]
      */
-     getControlByType:function(type, options){
+    getControlByType: function (type, options) {
         var ctrl;
-         switch (type) {
-                case "value":
-                    ctrl = this.getValue(options);
-                    break;
-                case "unit":
-                    ctrl = this.getUnit(options);
-                    break;
-                case "label":
-                    ctrl = this.getLabel(options);
-                    break;
-                case "state":
-                    ctrl = this.getState(options);
-                    break;
+        switch (type) {
+            case "value":
+                ctrl = this.getValue(options);
+                break;
+            case "unit":
+                ctrl = this.getUnit(options);
+                break;
+            case "label":
+                ctrl = this.getLabel(options);
+                break;
+            case "state":
+                ctrl = this.getState(options);
+                break;
+            case "device":
+                ctrl = this.getDevice(options);
+                break;
+            default: return;
+        }
 
-                default: return;
-            }
-
-            return ctrl;
+        return ctrl;
 
     }
 }

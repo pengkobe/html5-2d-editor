@@ -78,7 +78,7 @@ var Editor_2d = {
         this.ajaxLoadData();
 
         //启动计时器
-        this.ticker = new Hilo.Ticker(60);
+        this.ticker = new Hilo.Ticker(1000);
         this.ticker.addTick(Hilo.Tween);
         this.ticker.addTick(this.stage);
         this.ticker.start();
@@ -110,39 +110,14 @@ var Editor_2d = {
         // 从服务端拉取数据
         var dataJson = window.localStorage.getItem("monitorPageData");
         if (!dataJson) {
-            // dataJson = '{"valueCtrls":[{"name":"dddd","x":126,"y":91,"height":73,"width":120}],"unitCtrls":[{"name":"dx","x":255,"y":128,"height":35,"width":100}],"labelCtrls":[{"name":"lx","x":125,"y":168,"height":35,"width":100}]}'
-            dataJson = '{"valueCtrls":[{"x":142,"y":33,"height":51,"width":114},{"x":909,"y":336,"height":40,"width":100}],"unitCtrls":[{"x":135,"y":159,"height":35,"width":100}],"labelCtrls":[{"x":155,"y":264,"height":35,"width":100}],"switchCtrls":[{"x":369,"y":34,"height":51,"width":115},{"x":979,"y":45,"height":40,"width":100}]}';
+            dataJson = '[{"id":"value_2","type":"value","info":{"name":"jok","color":"#00ff00"},"opts":{"x":257,"y":89,"CtrlCount":2,"width":134,"height":29,"name":"Value组件。"}},{"id":"unit_3","type":"unit","info":{"name":"llll"},"opts":{"x":207,"y":222,"CtrlCount":3,"width":100,"height":35,"name":"Unit组件。"}},{"id":"label_4","type":"label","info":{},"opts":{"x":310,"y":90,"CtrlCount":4,"width":106,"height":22,"name":"Label组件。"}}]';
         }
-        var dataObj = JSON.parse(dataJson);
-        // 值控件
-        var valueCtrls = dataObj.valueCtrls;
-        for (var i in valueCtrls) {
-            ctrl = controls.getValue(valueCtrls[i]);
-            var ctrlId = ctrl.id;
-            var bindName = valueCtrls[i].name;
-            this.valueRefreshArr.push({ ctrlId: ctrlId, bindName: bindName });
-            this.customerScene.addCtrl(ctrl, "valueComp");
-        }
-
-        // 单位控件
-        var unitCtrls = dataObj.unitCtrls;
-        for (var i in unitCtrls) {
-            ctrl = controls.getUnit(unitCtrls[i]);
-            this.customerScene.addCtrl(ctrl, "unitComp");
-        }
-
-        // 标签控件
-        var labelCtrls = dataObj.labelCtrls;
-        for (var i in labelCtrls) {
-            ctrl = controls.getLabel(labelCtrls[i]);
-            this.customerScene.addCtrl(ctrl, "labelComp");
-        }
-
-        // 开关控件
-        var switchCtrls = dataObj.switchCtrls;
-        for (var i in switchCtrls) {
-            ctrl = controls.getSwitch(switchCtrls[i]);
-            this.customerScene.addCtrl(ctrl, "switchComp");
+        var ctrlList = JSON.parse(dataJson);
+        for (var i = 0; i < ctrlList.length; i++) {
+            var temp = ctrlList[i];
+            ctrl = controls.getControlByType(temp.type, temp.opts);
+            this.customerScene.addCtrl(ctrl.target);
+            this.valueRefreshArr.push({ ctrlId: temp.id, bindName: temp.info.bindName });
         }
     },
     /**
@@ -217,7 +192,7 @@ var Editor_2d = {
         this.state = 'beginning';
         // 刷新值数据
         var data = {
-            value1: 123,
+            jok: 123,
             value2: "停止",
             value3: "正常区",
         }
