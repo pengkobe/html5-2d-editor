@@ -1,69 +1,65 @@
-  <!-- 打开文件 -->
-  <div id="control">
-    <!--<div id="open" data-title="打开文件">添加底图<input type="file" value="选择图片" id="file" /></div>
-    <div id="delCtrl" data-title="删除选中的元素">删除选中元素</div>
-       <div id="dragmoveCtrl" data-title="拖动选中的元素">拖动选中的元素</div>-->
+<!-- 打开文件 -->
+<div id="control">
+  <a id="open" class="button is-active"  data-title="打开文件">
+    <span class="icon is-small">
+        <i class="fa fa-folder-open"></i>
+    </span>
+    <span>打开文件</span><input type="file" value="选择图片" id="file" />
+  </a>
 
-<a id="open" class="button is-active"  data-title="打开文件">
-  <span class="icon is-small">
-      <i class="fa fa-folder-open"></i>
-   </span>
-  <span>打开文件</span><input type="file" value="选择图片" id="file" />
-</a>
+  <a id="dragmoveCtrl" class="button is-active"  data-title="拖动选中元素">
+    <span class="icon">
+      <i class="fa fa-arrows"></i>
+    </span>
+    <span>拖动选中元素</span>
+  </a>
 
-<a id="dragmoveCtrl" class="button is-active"  data-title="拖动选中元素">
-  <span class="icon">
-    <i class="fa fa-arrows"></i>
-  </span>
-  <span>拖动选中元素</span>
-</a>
+  <a id="delCtrl" class="button is-danger"  data-title="删除选中元素">
+    <span class="icon">
+      <i class="fa fa-times"></i>
+    </span>
+    <span>删除选中元素</span>
+  </a>
+</div>
 
-<a id="delCtrl" class="button is-danger"  data-title="删除选中元素">
-  <span class="icon">
-    <i class="fa fa-times"></i>
-  </span>
-  <span>删除选中元素</span>
-</a>
-
-
-  </div>
-  <!-- 控件列表 -->
-  <div id="components">
+<!-- 控件列表 -->
+<div id="components">
     控件列表
     <a class="button is-success"  draggable="true"  data-title="值控件" data-tag="value">
-      <span class="icon"><i class="fa fa-github"></i></span>
+      <span class="icon"><i class="fa fa-signal"></i></span>
       <span>值控件</span>
+       <span id="openFileButton">...</span>
     </a>
-    <a class="button is-success"  draggable="true"  data-title="开关控件" data-tag="state">
-      <span class="icon"><i class="fa fa-github"></i></span>
-      <span>开关控件</span>
+    <a class="button is-success"  draggable="true"  data-title="状态控件" data-tag="state">
+      <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+      <span>状态控件</span>
     </a>
 
     <a class="button is-success"  draggable="true"  data-title="单位控件" data-tag="unit">
-      <span class="icon"><i class="fa fa-github"></i></span>
+      <span class="icon"><i class="fa fa-dollar"></i></span>
       <span>单位控件</span>
     </a>
 
     <a class="button is-success"  draggable="true"  data-title="标签控件" data-tag="label">
-      <span class="icon"><i class="fa fa-github"></i></span>
+      <span class="icon"><i class="fa fa-tag"></i></span>
       <span>标签控件</span>
     </a>
 
     <a class="button is-success"  draggable="true"  data-title="值控件" data-tag="device">
-      <span class="icon"><i class="fa fa-github"></i></span>
+      <span class="icon"><i class="fa fa-cog"></i></span>
       <span>设备控件</span>
     </a>
-  </div>
+</div>
 
-  <!-- 绘图区 -->
-  <div class="wrapper">
-    <span id="openFileButton">打开文件</span>
-    <div class="box" id="box"></div>
-  </div>
+<!-- 绘图区 -->
+<div class="wrapper">
+ 
+  <div class="box" id="box"></div>
+</div>
 
-  <!-- 参数面板 -->
-  <div class="paramPanel">
-    <div class="paramInput"></div>
-    <a  id="input_submit" class="button is-primary">保存</a>
-    <!--<input type="button" id="input_submit" value="保存" />-->
-  </div>
+<!-- 参数面板 -->
+<div class="paramPanel">
+  <a class="button" style="background:#ddd">参数面板</a>
+   <div class="paramInput"></div>
+   <a id="input_submit" class="button is-primary" style="display:none">保存</a>
+</div>

@@ -4,7 +4,7 @@
  */
 var ReadyScene = Hilo.Class.create({
     Extends: Hilo.Container,
-    constructor: function(properties) {
+    constructor: function (properties) {
         ReadyScene.superclass.constructor.call(this, properties);
         this.init(properties);
     },
@@ -16,16 +16,16 @@ var ReadyScene = Hilo.Class.create({
      * 初始化
      * @properties  {Object} [配置]
      */
-    init: function(properties) {
+    init: function (properties) {
         this.bindEvent();
     },
     /**
      * 全局事件
      */
-    bindEvent: function() {
+    bindEvent: function () {
         var that = this;
         // 删除元素
-        $("#delCtrl").on('click', function() {
+        $("#delCtrl").on('click', function () {
             if (that.selectedCtrl) {
                 var ctrlList = that.ctrlList;
                 var ctlLength = ctrlList.length;
@@ -42,23 +42,23 @@ var ReadyScene = Hilo.Class.create({
         });
 
         // 提交页面
-        $("#submitPage").on('click', function(e) {
+        $("#submitPage").on('click', function (e) {
             that.submitCtrlData();
         });
 
         // 鼠标移动事件
         this.moveCtrl();
 
-         // 保存控件信息提交事件
+        // 保存控件信息提交事件
         this.saveCtrlData();
 
         // 拖拽/放大选中元素
-        $("#dragmoveCtrl").on('click', function() {
+        $("#dragmoveCtrl").on('click', function () {
             that.selectedCtrl.startDrag();
             $(this).css("background", "#777");
         });
         this.on(Hilo.event.POINTER_MOVE,
-            function(e) {
+            function (e) {
                 if (that.state == "scale") {
                     var X = that.selectedCtrl.x;
                     var Y = that.selectedCtrl.y;
@@ -69,7 +69,7 @@ var ReadyScene = Hilo.Class.create({
                 }
             });
 
-        this.on(Hilo.event.POINTER_END, function(e) {
+        this.on(Hilo.event.POINTER_END, function (e) {
             that.state = "";
             $("#dragmoveCtrl").css("background", "#efefef");
             if (that.selectedCtrl) {
@@ -81,7 +81,7 @@ var ReadyScene = Hilo.Class.create({
      * 添加底图
      * @basemap {Hilo.Bitmap}   [底图对象]
      */
-    addBaseMap: function(basemap) {
+    addBaseMap: function (basemap) {
         if (this.baseMap) {
             this.removeChild(this.baseMap);
         }
@@ -90,11 +90,12 @@ var ReadyScene = Hilo.Class.create({
     },
 
     /**
-     * 添加控件
+     * 添加控件-
      * @Ctrl {Hilo.DOMElement}   [底图对象]
      * @type {String} [控件类型/value/unit/label]
      */
-    addCtrl: function(Ctrl) {
+    addCtrl: function (Ctrl) {
+        debugger;
         if (!this.baseMap) {
             m("请先添加底图！");
             return;
@@ -108,7 +109,7 @@ var ReadyScene = Hilo.Class.create({
      * 控件事件
      * @Ctrl {Hilo.DOMElement}   [底图对象]
      */
-    bindCtrlEvent: function(Ctrl) {
+    bindCtrlEvent: function (Ctrl) {
         var that = this;
         // 拖拽事件
         Hilo.copy(Ctrl, Hilo.drag);
@@ -117,7 +118,7 @@ var ReadyScene = Hilo.Class.create({
 
         // 选中事件
         Ctrl.on(Hilo.event.POINTER_START,
-            function(e) {
+            function (e) {
                 var target = e.eventTarget;
                 that.selectedCtrl = target;
                 // 拖拽放大缩小，方块为10个像素
@@ -141,6 +142,7 @@ var ReadyScene = Hilo.Class.create({
                     // 选中样式
                     var ele = document.getElementById(_id);
                     ele.style.border = "1px dotted red";
+                    $("#input_submit").show();
                     //  切换输入面板
                     that.switchCtrlInput(type, ctrlList, target);
                 }
@@ -150,7 +152,7 @@ var ReadyScene = Hilo.Class.create({
     /**
      * 鼠标微调
      */
-    moveCtrl: function() {
+    moveCtrl: function () {
         var that = this;
 
         function move() {
@@ -177,7 +179,7 @@ var ReadyScene = Hilo.Class.create({
      * 删除控件
      * @Ctrl {Hilo.DOMElement}   [控件]
      */
-    removeCtrl: function(Ctrl) {
+    removeCtrl: function (Ctrl) {
         this.removeChild(Ctrl);
     },
 
@@ -187,7 +189,7 @@ var ReadyScene = Hilo.Class.create({
      * @ctrlList {Array} [控件列表]
      * @target {Object} [当前选中控件]
      */
-    switchCtrlInput: function(type, ctrlList, target) {
+    switchCtrlInput: function (type, ctrlList, target) {
         var ctlLength = ctrlList.length;
         for (var i = 0; i < ctlLength; i++) {
             if (ctrlList[i].type == type) {
@@ -209,9 +211,9 @@ var ReadyScene = Hilo.Class.create({
     /**
      * 保存控件配置
      */
-    saveCtrlData: function() {
+    saveCtrlData: function () {
         var that = this;
-        $("#input_submit").on('click', function() {
+        $("#input_submit").on('click', function () {
             var selectedCtrl = that.selectedCtrl;
             var ctrlList = that.ctrlList;
             var ctlLength = ctrlList.length;
@@ -228,8 +230,8 @@ var ReadyScene = Hilo.Class.create({
      * [submitCtrlData 提交监控画面]
      * @return {[void]} []
      */
-    submitCtrlData: function() {
-        var result=[];
+    submitCtrlData: function () {
+        var result = [];
         var ctrlList = this.ctrlList;
         var ctlLength = ctrlList.length;
         for (var i = 0; i < ctlLength; i++) {
@@ -246,7 +248,7 @@ var ReadyScene = Hilo.Class.create({
         // 暂存至localStorage
         var data = JSON.stringify(result);
 
-debugger;
+        debugger;
 
         if (Hilo.browser.supportStorage) {
             // window.localStorage.removeItem("monitorPageData");

@@ -122,3 +122,11 @@
         padding: 3% 3% 7%;
     }
 }
+
+#footer{
+    color: black;
+    position: fixed;
+    bottom: 0px;
+    right: 0px;
+    z-index: 100;
+}

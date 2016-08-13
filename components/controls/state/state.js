@@ -7,41 +7,60 @@ function CrtlObj(id, opts, ele) {
     /**
      * [setDomData 输入面板html]
      */
-    this.setDomData = function() {
-        $("#stateField").val(this.info.name);
+    this.setDomData = function () {
+        if (this.info.name) {
+            $("#stateField").val("{" + this.info.name + "}");
+        }
+        // 事件注册
+        $(".state-add-button").on('click', function (e) {
+            var inputTpl = $("#value-key-tpl").html();
+            $(".key-value-ul").append(inputTpl);
+        });
     }
 
     /**
      * [setInfo 设置输入控件值]
      */
-    this.setInfo = function() {
+    this.setInfo = function () {
+        var that = this;
         var data = $("#stateField").val();
-        this.info.name=data;
+        that.info.name = data;
+        var value_key_list = $(".key-value-ul");
+
+        that.info.key_color_list = [];
+
+        $.each(value_key_list, function (e) {
+            var key = $(this).find("[type=text]").val();
+            var color = $(this).find("[type=color]").val();
+            that.info.key_color_list.push({
+                key: key,
+                color: color
+            });
+        });
+
         $("#" + this.id).find("span").html(data);
     }
 
     /**
      * [setFinalState 返回控件信息]
      */
-    this.setFinalState = function(){
+    this.setFinalState = function () {
         this.opts.x = this.target.x;
         this.opts.y = this.target.y;
         this.opts.height = this.target.height;
         this.opts.width = this.target.width;
 
         return {
-            id:this.id,
-            type:this.type,
-            info:this.info,
-            opts:this.opts
+            id: this.id,
+            type: this.type,
+            info: this.info,
+            opts: this.opts
         };
     }
 }
 
 CrtlObj.prototype.type = "state";
 CrtlObj.prototype.inputdDom = __inline('input.tpl');
-
-
 
 
 function c(options) {
@@ -61,11 +80,11 @@ function c(options) {
 
     var font = "18px arial";
     var data = {
-        name:  _default.name
+        name: _default.name
     };
     var content = __inline("state.handlebars")(data);
     var elem = new Hilo.DOMElement({
-        id: "state_" +  options.CtrlCount,
+        id: "state_" + options.CtrlCount,
         class: "drag-element",
         element: Hilo.createElement('div', {
             innerHTML: content,
@@ -81,7 +100,7 @@ function c(options) {
         x: opts.x,
         y: opts.y,
     });
-
-    return new CrtlObj("state_" + options.CtrlCount, opts, elem);
+    var obj = new CrtlObj("state_" + options.CtrlCount, opts, elem);
+    return obj;
 }
 module.exports = c;

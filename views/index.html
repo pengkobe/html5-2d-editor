@@ -15,7 +15,6 @@
     <link rel="stylesheet" type="text/css" href="lib/reset/reset.css">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.1.2/css/bulma.css">
     <!--<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.1.2/css/bulma.min.css">-->
-    
     <link rel="stylesheet" type="text/css" href="lib/static/history.css">
 
 </head>
@@ -29,34 +28,21 @@
 
 <body lang="cn">
 
-    <script>
-       // 弹出框
-        function m(msg) {
-            var mask = document.createElement("div");
-            mask.className = "mask";
-            var maskInfo = document.createElement("div");
-            maskInfo.className = "mask-info";
-            maskInfo.innerHTML = "<a href='#' id='maskInfoClose'>×</a>";
-            if (msg) {
-                maskInfo.innerHTML += msg;
-            } else {
-                if (isCN) {
-                    maskInfo.innerHTML += "欢迎体验使用监控画面编辑器，适用于底图＋简单控件的监控画面制作。<br />" +
-                        "<a href='#' target='_blank'>演示地址</a>"
-                }
-            }
-            document.body.appendChild(mask);
-            document.body.appendChild(maskInfo);
-            document.querySelector("#maskInfoClose").onclick = function (e) {
-                e.preventDefault();
-                mask.remove();
-                maskInfo.remove();
-            }
-        };
-    </script>
+
     <!-- lib -->
     <script src="lib/lib.js"></script>
     <script src="boot.js?__inline"></script>
+    <script>
+       // 弹出框
+        function m(msg) {
+            var domObj = $('<h1 style="color:white;font-size:34px;text-align:center">'+msg+'</h1>');
+            $(".modal").addClass("is-active");
+            $(".modal-content").html(domObj);
+            $(".modal-close").on('click',function(e){
+                $(".modal").removeClass("is-active");
+            });
+        }
+    </script>
 </body>
 
 </html>

@@ -15,6 +15,10 @@ body {
 button {
     cursor: pointer;
 }
+.nav-item{
+    border-right: solid #777;
+    font-size: 20px; 
+}
 #control > *,#open2  {
     transition: all 0.4s ease;
     -weblit-transition: all 0.4s ease;
@@ -24,9 +28,11 @@ button {
 
 .header {
     height: 48px;
-    padding: 0 10px;
-    background: #333;
+    background: #ddd;
     box-shadow: 0 0 5px #333;
+}
+.header nav{
+    background: #ddd;
 }
 .header h1 {
     font-size: 28px;
@@ -94,6 +100,7 @@ button {
     box-shadow: 3px 3px 5px #CCC;
 }
 #control a {
+    width: 90%;
     height: 24px;
     padding: 5px;
     border: 1px solid #CCC;
@@ -194,6 +201,17 @@ div#color {
     opacity: 0.001;
     cursor: pointer;
 }
+#file_cus {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.001;
+    cursor: pointer;
+}
 .line {
     position: absolute;
     line-height: 0;
@@ -237,51 +255,6 @@ div#color {
     border-color: green!important;
     cursor: pointer;
 }
-.mask {
-    position: fixed;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    background: #000;
-    opacity: 0.3;
-}
-.mask-info {
-    position: absolute;
-    width: 300px;
-    top: 50%;
-    left: 50%;
-    margin-left: -190px;
-    margin-top: -90px;
-    padding: 20px 40px;
-    background: #000;
-    color: #FFF;
-    line-height: 32px;
-    border-radius: 8px;
-    box-shadow: 3px 3px 5px #CCC;
-    font-size: 14px;
-
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    max-height: 120px;
-    margin: auto;
-}
-.mask-info  a {
-    color: #FFF;
-    border-bottom: 1px dotted #FFF;
-    text-decoration: none;
-}
-#maskInfoClose {
-    color: #FFF;
-    font-size: 30px;
-    position: absolute;
-    right: 10px;
-    top: 0px;
-    border: none;
-    text-decoration: none;
-}
 
 /* canvas相关 */
 body, div, canvas{
@@ -293,13 +266,16 @@ body, div, canvas{
 /*参数面板*/
 .paramPanel {
     position: absolute;
-    right: 10px;
-    top: 68px;
-    width: 120px;
+    right: 1px;
+    top: 10px;
+    width: 145px;
     border: 1px solid #CCC;
     box-shadow: 3px 3px 5px #CCC;
 }
 .paramPanel a{
+    width: 100%;
+}
+.paramPanel input{
     width: 100%;
 }
 
@@ -329,5 +305,3 @@ body, div, canvas{
     -ms-word-wrap: break-word;
     word-break: break-all;
 }
-
-

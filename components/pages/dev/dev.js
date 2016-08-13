@@ -53,7 +53,6 @@ var Editor_2d = window.Editor_2d = {
     */
     initStage: function () {
         var that = this;
-
         var container = document.getElementById("box");
         this.width = window.innerWidth - 300;
         this.height = 720;
@@ -89,8 +88,7 @@ var Editor_2d = window.Editor_2d = {
         var that = this;
         //开启事件交互
         this.stage.enableDOMEvent([Hilo.event.POINTER_START, Hilo.event.POINTER_MOVE, Hilo.event.POINTER_END]);
-        this.stage.on(Hilo.event.POINTER_START,
-            this.onUserInput.bind(this));
+        this.stage.on(Hilo.event.POINTER_START,this.onUserInput.bind(this));
 
         // 舞台自适应宽高
         window.addEventListener("resize", resizeStage, false);
