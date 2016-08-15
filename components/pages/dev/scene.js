@@ -95,7 +95,6 @@ var ReadyScene = Hilo.Class.create({
      * @type {String} [控件类型/value/unit/label]
      */
     addCtrl: function (Ctrl) {
-        debugger;
         if (!this.baseMap) {
             m("请先添加底图！");
             return;
@@ -247,12 +246,10 @@ var ReadyScene = Hilo.Class.create({
 
         // 暂存至localStorage
         var data = JSON.stringify(result);
-
         debugger;
-
         if (Hilo.browser.supportStorage) {
-            // window.localStorage.removeItem("monitorPageData");
-            // window.localStorage.setItem("monitorPageData", data);
+             window.localStorage.removeItem("monitorPageData");
+             window.localStorage.setItem("monitorPageData", data);
         }
     }
 });

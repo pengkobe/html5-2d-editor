@@ -1,6 +1,6 @@
-function CrtlObj(id, opts, ele) {
+function CrtlObj(id, opts, ele,info) {
     this.id = id;
-    this.info = {};
+    this.info = info || {};
     this.opts = opts;
     this.target = ele;
 
@@ -20,7 +20,7 @@ function CrtlObj(id, opts, ele) {
         var color = $("#colorFiled").val();
         this.info.name = data;
         this.info.color = color;
-        $("#" + this.id).find("span").html(data).text("{{" + data + "}}").css("color", color);;
+        $("#" + this.id).find("span").text("{{" + data + "}}").css("color", color);
     }
 
     /**
@@ -31,7 +31,6 @@ function CrtlObj(id, opts, ele) {
         this.opts.y = this.target.y;
         this.opts.height = this.target.height;
         this.opts.width = this.target.width;
-
         return {
             id: this.id,
             type: this.type,
@@ -39,12 +38,20 @@ function CrtlObj(id, opts, ele) {
             opts: this.opts
         };
     }
+
+    /**
+     * [refreshData 值刷新]
+     */
+    this.refreshData = function(data) {
+       var color = this.info.color? this.info.color: "#fff";
+       $("#" + this.id).find("span").text(data).css("color", color);
+    }
 }
 
 CrtlObj.prototype.type = "value";
 CrtlObj.prototype.inputdDom = __inline('input.tpl');
 
-function c(options) {
+function c(options,info) {
     var _default = {
         x: 0,
         y: 0,
@@ -82,7 +89,7 @@ function c(options) {
         x: opts.x,
         y: opts.y,
     });
-    return new CrtlObj("value_" + options.CtrlCount, opts, elem);
+    return new CrtlObj("value_" + options.CtrlCount, opts, elem,info);
 }
 
 module.exports = c;

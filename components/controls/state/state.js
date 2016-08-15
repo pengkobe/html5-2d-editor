@@ -1,6 +1,6 @@
-function CrtlObj(id, opts, ele) {
+function CrtlObj(id, opts, ele,info) {
     this.id = id;
-    this.info = {};
+    this.info = info || {};
     this.opts = opts;
     this.target = ele;
 
@@ -57,13 +57,28 @@ function CrtlObj(id, opts, ele) {
             opts: this.opts
         };
     }
+
+    /**
+     * [refreshData 值刷新]
+     */
+    this.refreshData = function (data) {
+        // todo：这里可能要建立值的映射关系
+        var color = "#fff";
+        var clist = this.info.key_color_list;
+        for (var i = 0; i < clist.length; i++) {
+            if (clist[i].key == data) {
+                color = clist[i].color;
+            }
+        }
+        $("#" + this.id).find("span").text(data).css("color", color);
+    }
 }
 
 CrtlObj.prototype.type = "state";
 CrtlObj.prototype.inputdDom = __inline('input.tpl');
 
 
-function c(options) {
+function c(options,info) {
     var _default = {
         x: 0,
         y: 0,
@@ -100,7 +115,7 @@ function c(options) {
         x: opts.x,
         y: opts.y,
     });
-    var obj = new CrtlObj("state_" + options.CtrlCount, opts, elem);
+    var obj = new CrtlObj("state_" + options.CtrlCount, opts, elem,info);
     return obj;
 }
 module.exports = c;

@@ -115,9 +115,12 @@ var Editor_2d = {
         var ctrlList = JSON.parse(dataJson);
         for (var i = 0; i < ctrlList.length; i++) {
             var temp = ctrlList[i];
-            ctrl = controls.getControlByType(temp.type, temp.opts);
+            ctrl = controls.getControlByType(temp.type, temp.opts, temp.info);
             this.customerScene.addCtrl(ctrl.target);
-            this.valueRefreshArr.push({ ctrlId: temp.id, bindName: temp.info.bindName });
+            if (ctrl.type == "value" || ctrl.type == "state") {
+                this.valueRefreshArr.push(ctrl);
+            }
+
         }
     },
     /**
@@ -185,28 +188,37 @@ var Editor_2d = {
         this.customerScene.visible = true;
     },
     /**
-    * 数据刷新
+    * 数据刷新[测试]
     */
     dataRefresh: function () {
         var that = this;
         this.state = 'beginning';
-        // 刷新值数据
-        var data = {
-            jok: 123,
-            value2: "停止",
-            value3: "正常区",
-        }
         var cha = 1;
+        // 刷新值数据
+
+
         setInterval(function (params) {
+            var mock = "";
+            if(cha % 2){
+                mock = "正常";
+            }else{
+                 mock = "异常";
+            }
+            var data = {
+                joke: 123 + cha,
+                value2: "停止",
+                value3: mock,
+            }
             for (var i = 0; i < that.valueRefreshArr.length; i++) {
                 var temp = that.valueRefreshArr[i];
-                var value = data[temp.bindName];
+                var value = data[temp.info.name];
                 if (value) {
-                    $("#" + temp.ctrlId).html(value + cha);
+                    // 控制自刷新数据
+                    temp.refreshData(value);
                 }
                 cha++;
             }
-        }, 5000);
+        }, 2000);
     }
 };
 

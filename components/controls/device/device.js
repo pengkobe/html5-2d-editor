@@ -36,12 +36,16 @@ function CrtlObj(id, opts, ele) {
             opts:this.opts
         };
     }
+
+    /**
+     * TODO:[refreshData 值刷新]
+     */
+    this.refreshData = function (data) {
+    }
 }
 
 CrtlObj.prototype.type = "device";
 CrtlObj.prototype.inputdDom = __inline('input.tpl');
-
-
 
 function c(options) {
     var _default = {
